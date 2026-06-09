@@ -8,7 +8,7 @@ font-family = "Hack Nerd Font Mono"
 
 # Opacity & blur
 background-opacity = 0.8
-background-blur = 50
+background-blur = 20
 
 # Window
 macos-titlebar-style = hidden
