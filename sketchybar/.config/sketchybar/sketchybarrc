@@ -1,7 +1,7 @@
-# Soft Purple Theme
+# Amber Amethyst Theme (Purple + Gold)
 # Colors
-ACCENT=0xff89cff0
-HIGHLIGHT=0xff6ba3ff
+ACCENT=0xfffbbf24
+HIGHLIGHT=0xffa855f7
 WHITE=0xffffffff
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"

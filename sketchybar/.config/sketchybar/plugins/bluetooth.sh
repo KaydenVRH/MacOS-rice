@@ -3,7 +3,7 @@
 STATE=$(system_profiler SPBluetoothDataType 2>/dev/null | grep "State:" | head -1 | awk '{print $2}')
 
 if [ "$STATE" = "On" ]; then
-  sketchybar --set "$NAME" icon= label="on" icon.color=0xff89cff0
+  sketchybar --set "$NAME" icon= label="on" icon.color=0xfffbbf24
 else
-  sketchybar --set "$NAME" icon= label="off" icon.color=0x4489cff0
+  sketchybar --set "$NAME" icon= label="off" icon.color=0x44fbbf24
 fi

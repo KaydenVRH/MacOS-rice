@@ -44,30 +44,30 @@ keybind = ctrl+a>n=next_tab
 keybind = ctrl+a>p=previous_tab
 
 # ============================================================
-# THEME — Blue Lagoon (soft blue)
+# THEME — Amber Amethyst (deep purple + gold)
 # ============================================================
-palette = 0=#0e1419
-palette = 1=#89cff0
-palette = 2=#a8e6cf
-palette = 3=#ffd3b6
-palette = 4=#6ba3ff
-palette = 5=#c3aedb
-palette = 6=#7ecfd4
-palette = 7=#e8f0f8
-palette = 8=#1a2a38
-palette = 9=#a8ddf5
-palette = 10=#b8f0df
-palette = 11=#ffe0c4
-palette = 12=#8bbaff
-palette = 13=#d4c4e8
-palette = 14=#9edfe3
-palette = 15=#f0f6fc
+palette = 0=#1e1a2e
+palette = 1=#ef4444
+palette = 2=#34d399
+palette = 3=#fbbf24
+palette = 4=#818cf8
+palette = 5=#a855f7
+palette = 6=#22d3ee
+palette = 7=#e2e8f0
+palette = 8=#352f50
+palette = 9=#f87171
+palette = 10=#6ee7b7
+palette = 11=#fde68a
+palette = 12=#a5b4fc
+palette = 13=#c084fc
+palette = 14=#67e8f9
+palette = 15=#f8fafc
 
-foreground = #e8f0f8
-background = #0e1419
+foreground = #e2e8f0
+background = #1e1a2e
 
-cursor-color = #89cff0
-cursor-text = #0e1419
+cursor-color = #fbbf24
+cursor-text = #1e1a2e
 
-selection-foreground = #e8f0f8
-selection-background = #1a2a38
+selection-foreground = #e2e8f0
+selection-background = #a855f7
