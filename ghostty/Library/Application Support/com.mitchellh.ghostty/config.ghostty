@@ -44,30 +44,30 @@ keybind = ctrl+a>n=next_tab
 keybind = ctrl+a>p=previous_tab
 
 # ============================================================
-# THEME — Amber Amethyst (deep purple + gold)
+# THEME — Duotone Amethyst (deep purple base + gold accent)
 # ============================================================
-palette = 0=#1e1a2e
-palette = 1=#ef4444
-palette = 2=#34d399
-palette = 3=#fbbf24
-palette = 4=#818cf8
-palette = 5=#a855f7
-palette = 6=#22d3ee
-palette = 7=#e2e8f0
-palette = 8=#352f50
-palette = 9=#f87171
-palette = 10=#6ee7b7
-palette = 11=#fde68a
-palette = 12=#a5b4fc
-palette = 13=#c084fc
-palette = 14=#67e8f9
-palette = 15=#f8fafc
+palette = 0=#181425
+palette = 1=#b89cf0
+palette = 2=#a88ae0
+palette = 3=#f5c842
+palette = 4=#7b5db8
+palette = 5=#c4a9f8
+palette = 6=#9b7dd6
+palette = 7=#ddd6f0
+palette = 8=#282240
+palette = 9=#c4a9f8
+palette = 10=#b89cf0
+palette = 11=#f7d56a
+palette = 12=#9b7dd6
+palette = 13=#ddd6f0
+palette = 14=#c4a9f8
+palette = 15=#ede8f5
 
-foreground = #e2e8f0
-background = #1e1a2e
+foreground = #ddd6f0
+background = #181425
 
-cursor-color = #fbbf24
-cursor-text = #1e1a2e
+cursor-color = #f5c842
+cursor-text = #181425
 
-selection-foreground = #e2e8f0
-selection-background = #a855f7
+selection-foreground = #181425
+selection-background = #f5c842

@@ -1,86 +1,354 @@
--- 1. Setup Lazy.nvim
+-- ═══════════════════════════════════════════════════════════════════
+--  Kayden's Neovim Config
+-- ═══════════════════════════════════════════════════════════════════
+
+-- ── 0. Inline Music Player ────────────────────────────────────────
+
+local music = {}
+local mpv_job = nil
+local current_job_id = 0
+music._current_name = nil
+music._playlist = nil
+music._playlist_idx = 0
+music._quitting = false
+
+-- Kill mpv on exit to prevent orphans
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  callback = function()
+    music._quitting = true
+    if mpv_job then
+      vim.fn.jobstop(mpv_job)
+    end
+    os.execute("rm -f " .. music._socket .. "; pkill -x mpv 2>/dev/null")
+  end,
+})
+
+music._socket = "/tmp/nvim-mpv-socket"
+
+local function mpv_cmd(cmd)
+  os.execute("echo '" .. cmd .. "' | nc -U " .. music._socket .. " 2>/dev/null")
+end
+
+function music._spawn(args)
+  if music._quitting then return end
+  music.stop()
+  os.execute("rm -f " .. music._socket)
+  table.insert(args, "--input-ipc-server=" .. music._socket)
+  current_job_id = current_job_id + 1
+  local this_id = current_job_id
+  mpv_job = vim.fn.jobstart(args, {
+    on_exit = function()
+      if current_job_id ~= this_id then return end -- stale job
+      mpv_job = nil
+      music._current_name = nil
+      music._play_next()
+    end,
+  })
+end
+
+function music._play_next()
+  if music._quitting then return end
+  if music._playlist and #music._playlist > 0 then
+    music._playlist_idx = music._playlist_idx + 1
+    if music._playlist_idx <= #music._playlist then
+      music.play(music._playlist[music._playlist_idx])
+    else
+      music._playlist = nil
+      music._playlist_idx = 0
+      vim.notify("♪ playlist finished")
+    end
+  end
+end
+
+function music._build_playlist(dir, selected_file)
+  local files = vim.fn.readdir(dir)
+  local playlist = {}
+  local exts = { mp3 = true, flac = true, wav = true, ogg = true, m4a = true, aac = true, opus = true, wma = true }
+  for _, f in ipairs(files) do
+    local ext = vim.fn.fnamemodify(f, ":e"):lower()
+    if exts[ext] then
+      table.insert(playlist, dir .. "/" .. f)
+    end
+  end
+  table.sort(playlist)
+  music._playlist = playlist
+  music._playlist_idx = 0
+  -- Find selected file in playlist
+  if selected_file then
+    for i, p in ipairs(playlist) do
+      if p == selected_file then
+        music._playlist_idx = i
+        break
+      end
+    end
+  end
+end
+
+function music.play(path)
+  if not path or path == "" then return end
+  local name = vim.fn.fnamemodify(path, ":t")
+  music._current_name = name
+  -- Build playlist from same directory if not already set
+  local dir = vim.fn.fnamemodify(path, ":h")
+  if not music._playlist or #music._playlist == 0 then
+    music._build_playlist(dir, path)
+  end
+  music._spawn({ "mpv", "--no-terminal", "--no-video", path })
+  vim.notify("♪ " .. name)
+end
+
+function music.play_picker()
+  -- Use `fd` if available, otherwise `find` for audio extensions
+  local find_cmd = vim.fn.executable("fd") == 1
+    and { "fd", "--type", "f", "--extension", "mp3", "--extension", "flac",
+          "--extension", "wav", "--extension", "ogg", "--extension", "m4a", "--extension", "aac",
+          "--extension", "opus", "--extension", "wma" }
+    or { "find", ".", "-type", "f", "(",
+          "-name", "*.mp3", "-o", "-name", "*.flac", "-o", "-name", "*.wav",
+          "-o", "-name", "*.ogg", "-o", "-name", "*.m4a", "-o", "-name", "*.aac",
+          "-o", "-name", "*.opus", "-o", "-name", "*.wma", ")" }
+
+  require("telescope.builtin").find_files({
+    prompt_title = "♪ Music",
+    cwd = vim.fn.expand("~/Music"),
+    find_command = find_cmd,
+    attach_mappings = function(_, map)
+      map("i", "<CR>", function(prompt_bufnr)
+        local actions = require("telescope.actions")
+        local state = require("telescope.actions.state")
+        local selection = state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          music.play(selection.path or selection.value)
+        end
+      end)
+      return true
+    end,
+  })
+end
+
+function music.play_url()
+  local url = vim.fn.input("♪ URL: ")
+  if url and #url > 0 then
+    music._playlist = nil
+    music._current_name = url
+    music._spawn({ "mpv", "--no-terminal", "--no-video", url })
+    vim.notify("♪ playing URL")
+  end
+end
+
+function music.toggle()
+  mpv_cmd("cycle pause")
+  vim.notify("♪ toggled")
+end
+
+function music.stop()
+  mpv_cmd("quit")
+  if mpv_job then vim.fn.jobstop(mpv_job) end
+  mpv_job = nil
+  music._current_name = nil
+  music._playlist = nil
+  music._playlist_idx = 0
+end
+
+function music.next()
+  if music._playlist and #music._playlist > 0 then
+    music._play_next()
+  else
+    mpv_cmd("playlist-next")
+  end
+end
+
+function music.prev()
+  if music._playlist and music._playlist_idx > 1 then
+    music._playlist_idx = music._playlist_idx - 1
+    music.play(music._playlist[music._playlist_idx])
+  else
+    mpv_cmd("playlist-prev")
+  end
+end
+
+local is_mac = vim.fn.has("macunix") == 1 or vim.fn.has("mac") == 1
+
+function music.volume_up()
+  if is_mac then
+    os.execute("osascript -e 'set volume output volume (output volume of (get volume settings) + 5)'")
+  else
+    os.execute("amixer -q set Master 5%+ 2>/dev/null || pactl set-sink-volume @DEFAULT_SINK@ +5% 2>/dev/null")
+  end
+  vim.notify("♪ +5")
+end
+
+function music.volume_down()
+  if is_mac then
+    os.execute("osascript -e 'set volume output volume (output volume of (get volume settings) - 5)'")
+  else
+    os.execute("amixer -q set Master 5%- 2>/dev/null || pactl set-sink-volume @DEFAULT_SINK@ -5% 2>/dev/null")
+  end
+  vim.notify("♪ -5")
+end
+
+function music.now_playing()
+  if music._current_name then
+    vim.notify("♪ " .. music._current_name)
+  else
+    vim.notify("♪ nothing playing")
+  end
+end
+
+function music.quit()
+  music._quitting = true
+  music.stop()
+  vim.notify("♪ mpv quit")
+end
+
+-- For lualine
+function music.current()
+  return music._current_name and " ♪ " .. music._current_name or ""
+end
+
+
+-- ═══════════════════════════════════════════════════════════════════
+--  1. Lazy.nvim Setup
+-- ═══════════════════════════════════════════════════════════════════
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
+  vim.fn.system({ "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
 end
 vim.opt.rtp:prepend(lazypath)
 
--- 2. Basic Settings
+
+-- ═══════════════════════════════════════════════════════════════════
+--  2. Basic Settings
+-- ═══════════════════════════════════════════════════════════════════
+
 vim.g.mapleader = " "
 vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.mouse = "a" -- Enable mouse support for the tree
+vim.opt.mouse = "a"
+vim.cmd.colorscheme("amber")
 
--- 3. Plugins
+
+-- ═══════════════════════════════════════════════════════════════════
+--  3. Plugins
+-- ═══════════════════════════════════════════════════════════════════
+
 require("lazy").setup({
-  -- THEME
+
+  -- ── THEME ─────────────────────────────────────────────────────
   {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    config = function()
-      require("catppuccin").setup({ transparent_background = true })
-      vim.cmd.colorscheme "catppuccin"
-    end,
+    lazy = true,
+    config = function() require("catppuccin").setup({}) end,
   },
 
-  -- TELESCOPE
+  -- ── TELESCOPE ─────────────────────────────────────────────────
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.8',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.8",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function() require("telescope").setup({}) end,
   },
 
-  -- STATUSLINE
+  -- ── STATUSLINE ────────────────────────────────────────────────
   {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      local ok, music = pcall(require, "music")
-      require('lualine').setup({
-        options = { theme = 'catppuccin' },
+      require("lualine").setup({
+        options = { theme = "auto" },
         sections = {
-          lualine_c = { { function() return (ok and music and music.current and music.current()) or "" end } },
+          lualine_c = { { music.current } },
         },
       })
-    end
+    end,
   },
 
-  -- FILE TREE
+  -- ── BUFFERLINE ───────────────────────────────────────────────
   {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function() require("nvim-tree").setup({}) end
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("bufferline").setup({
+        options = {
+          mode = "buffers",
+          numbers = "none",
+          indicator = { style = "underline" },
+          separator_style = "slant",
+          diagnostics = "nvim_lsp",
+          offsets = {
+            { filetype = "neo-tree", text = "File Tree", text_align = "center" },
+          },
+        },
+        highlights = {
+          fill = { bg = "none" },
+          background = { bg = "none" },
+          tab = { bg = "none" },
+          tab_selected = { bg = "none" },
+          separator = { bg = "none" },
+          separator_selected = { bg = "none" },
+          separator_visible = { bg = "none" },
+          close_button = { bg = "none" },
+          close_button_selected = { bg = "none" },
+          close_button_visible = { bg = "none" },
+        },
+      })
+    end,
   },
-  --toggleterm aka the runner
+
+  -- ── FILE TREE ─────────────────────────────────────────────────
   {
-    'akinsho/toggleterm.nvim',
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require("neo-tree").setup({
+        window = { width = 30 },
+        filesystem = { filtered_items = { hide_dotfiles = false } },
+      })
+    end,
+  },
+
+  -- ── TERMINAL ──────────────────────────────────────────────────
+  {
+    "akinsho/toggleterm.nvim",
     version = "*",
     config = function()
       require("toggleterm").setup({
         size = 20,
-        open_mapping = [[<c-\>]], -- Ctrl + \ toggles the main terminal
+        open_mapping = [[<c-\>]],
         shade_terminals = false,
-        direction = 'float', -- This makes it a cool floating window
-        float_opts = {
-          border = 'curved',
-        },
+        direction = "float",
+        float_opts = { border = "curved" },
       })
-    end
+    end,
   },
+
+  -- ── AUTOPAIRS ─────────────────────────────────────────────────
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
-    config = true
+    config = true,
   },
+
+  -- ── MASON ─────────────────────────────────────────────────────
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
     config = true,
   },
 
-  -- LSP
+  -- ── LSP ───────────────────────────────────────────────────────
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -88,8 +356,7 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
       require("mason-lspconfig").setup({
         ensure_installed = { "lua_ls", "bashls", "pyright", "gopls" },
         handlers = {
@@ -117,7 +384,7 @@ require("lazy").setup({
     end,
   },
 
-  -- Treesitter
+  -- ── TREESITTER ────────────────────────────────────────────────
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -131,7 +398,7 @@ require("lazy").setup({
     end,
   },
 
-  -- Dashboard
+  -- ── DASHBOARD ─────────────────────────────────────────────────
   {
     "goolord/alpha-nvim",
     config = function()
@@ -139,21 +406,21 @@ require("lazy").setup({
       local theme = require("alpha.themes.dashboard")
 
       theme.section.header.val = {
-        " __  ___ .__   __. ____    ____  __  .___  ___. ",
-        "|  |/  / |  \\ |  | \\   \\  /   / |  | |   \\/   | ",
-        "|  '  /  |   \\|  |  \\   \\/   /  |  | |  \\  /  | ",
-        "|    <   |  . `  |   \\      /   |  | |  |\\/|  | ",
-        "|  .  \\  |  |\\   |    \\    /    |  | |  |  |  | ",
-        "|__|\\__\\ |__| \\__|     \\__/     |__| |__|  |__| ",
-        "                                                ",
+        "   __             _     ",
+        [=[  / /__ ___ _  __(_)_ _ ]=],
+        [=[ /  '_// _ \ |/ / /  ' \]=],
+        [=[/_/\_\/_//_/___/_/_/_/_/]=],
+        "                         ",
+        "       k a y d e n       ",
+        "                         ",
       }
 
       theme.section.buttons.val = {
-        theme.button("f", "    Find file", "<cmd>Telescope find_files<CR>"),
-        theme.button("r", "    Recent files", "<cmd>Telescope oldfiles<CR>"),
-        theme.button("g", "    LazyGit", "<cmd>LazyGit<CR>"),
-        theme.button("e", "    File tree", "<cmd>NvimTreeToggle<CR>"),
-        theme.button("q", "    Quit", "<cmd>qa<CR>"),
+        theme.button("f", "    Find file",     "<cmd>Telescope find_files<CR>"),
+        theme.button("r", "    Recent files",  "<cmd>Telescope oldfiles<CR>"),
+        theme.button("g", "    LazyGit",       "<cmd>LazyGit<CR>"),
+        theme.button("e", "    File tree",     "<cmd>Neotree toggle<CR>"),
+        theme.button("q", "    Quit",          "<cmd>qa<CR>"),
       }
 
       theme.section.footer.val = {
@@ -168,7 +435,7 @@ require("lazy").setup({
     end,
   },
 
-
+  -- ── LAZYGIT ───────────────────────────────────────────────────
   {
     "kdheepak/lazygit.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -177,7 +444,7 @@ require("lazy").setup({
     },
   },
 
-  -- image.nvim
+  -- ── IMAGE VIEWER ──────────────────────────────────────────────
   {
     "3rd/image.nvim",
     build = "make",
@@ -191,20 +458,25 @@ require("lazy").setup({
     },
   },
 
-  -- opencode.nvim
+  -- ── OPENCODE ──────────────────────────────────────────────────
   {
     "nickjvandyke/opencode.nvim",
     version = "*",
     config = function()
       vim.g.opencode_opts = {}
-
-      vim.keymap.set({ "n", "x" }, "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
-      vim.keymap.set({ "n", "x" }, "<leader>os", function() require("opencode").select() end, { desc = "Select opencode" })
-      vim.keymap.set("n", "<leader>ot", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
+      vim.keymap.set({ "n", "x" }, "<leader>oa",
+        function() require("opencode").ask("@this: ", { submit = true }) end,
+        { desc = "Ask opencode" })
+      vim.keymap.set({ "n", "x" }, "<leader>os",
+        function() require("opencode").select() end,
+        { desc = "Select opencode" })
+      vim.keymap.set("n", "<leader>ot",
+        function() require("opencode").toggle() end,
+        { desc = "Toggle opencode" })
     end,
   },
 
-  -- Autocomplete
+  -- ── AUTOCOMPLETE ──────────────────────────────────────────────
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -218,9 +490,7 @@ require("lazy").setup({
 
       cmp.setup({
         snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
+          expand = function(args) luasnip.lsp_expand(args.body) end,
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -259,12 +529,17 @@ require("lazy").setup({
 
 })
 
--- 4. The Bulletproof Transparency
+
+-- ═══════════════════════════════════════════════════════════════════
+--  4. Transparency
+-- ═══════════════════════════════════════════════════════════════════
+
 local function clear_bg()
-  local groups = { 
-    "Normal", "NormalNC", "SignColumn", "MsgArea", 
-    "TelescopeNormal", "TelescopeBorder", "NvimTreeNormal", "NvimTreeNormalNC",
-    "ToggleTerm1FloatNormal", "ToggleTerm1FloatBorder"
+  local groups = {
+    "Normal", "NormalNC", "SignColumn", "MsgArea",
+    "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopeResultsNormal",
+    "NeoTreeNormal", "NeoTreeNormalNC",
+    "ToggleTerm1FloatNormal", "ToggleTerm1FloatBorder",
   }
   for _, group in ipairs(groups) do
     vim.api.nvim_set_hl(0, group, { bg = "none", ctermbg = "none" })
@@ -274,32 +549,42 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", { callback = clear_bg })
 clear_bg()
 
--- 5. Keymaps
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true }) -- Toggle File Tree
 
-vim.keymap.set('n', '<leader>tt', ':ToggleTerm direction=float<CR>', { silent = true, desc = "Popup terminal" })
+-- ═══════════════════════════════════════════════════════════════════
+--  5. Keymaps
+-- ═══════════════════════════════════════════════════════════════════
 
-vim.keymap.set('n', '<leader>r', function()
+-- ── General ─────────────────────────────────────────────────────
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>e",  ":Neotree toggle<CR>", { silent = true, desc = "File tree" })
+vim.keymap.set("n", "<leader>tt", ":ToggleTerm direction=float<CR>", { silent = true, desc = "Terminal" })
+
+-- ── Buffer switching (like ked's Tab/S-Tab) ────────────────────
+vim.keymap.set("n", "<Tab>",   "<cmd>BufferLineCycleNext<CR>", { silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { silent = true, desc = "Prev buffer" })
+vim.keymap.set("n", "<leader>bc", "<cmd>bdelete<CR>", { silent = true, desc = "Close buffer" })
+vim.keymap.set("n", "<leader>bp", "<cmd>BufferLinePick<CR>", { silent = true, desc = "Pick buffer" })
+
+-- ── Runner ──────────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>r", function()
   vim.cmd("write")
-  local file_ext = vim.bo.filetype
-  if file_ext == "python" then
-    vim.cmd("TermExec cmd='python3 %'")
-  elseif file_ext == "sh" then
-    vim.cmd("TermExec cmd='bash %'")
-  elseif file_ext == "lua" then
-    vim.cmd("TermExec cmd='lua %'")
-  elseif file_ext == "go" then
-    -- 'go run' compiles and runs the file in one step
-    vim.cmd("TermExec cmd='go run %'")
+  local ft = vim.bo.filetype
+  local runners = {
+    python = "python3 %",
+    sh = "bash %",
+    lua = "lua %",
+    go = "go run %",
+  }
+  if runners[ft] then
+    vim.cmd("TermExec cmd='" .. runners[ft] .. "'")
   else
-    print("No runner configured for " .. file_ext)
+    vim.notify("No runner for " .. ft, vim.log.levels.WARN)
   end
-end)
+end, { desc = "Run file" })
 
--- Paste image from clipboard into markdown
-vim.keymap.set('n', '<leader>pi', function()
+-- ── Paste image ─────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>pi", function()
   local file_dir = vim.fn.expand("%:p:h")
   local assets_dir = file_dir .. "/assets"
   vim.fn.mkdir(assets_dir, "p")
@@ -310,26 +595,23 @@ vim.keymap.set('n', '<leader>pi', function()
 
   local ok = os.execute("pngpaste " .. vim.fn.shellescape(filepath) .. " 2>/dev/null")
   if ok ~= 0 then
-    print("No image in clipboard")
+    vim.notify("No image in clipboard", vim.log.levels.WARN)
     return
   end
 
   local relpath = "assets/" .. filename
   vim.api.nvim_put({ "![](" .. relpath .. ")" }, "c", true, true)
-  print("Pasted " .. relpath)
-end, { desc = "Paste image from clipboard" })
+  vim.notify("Pasted " .. relpath)
+end, { desc = "Paste image" })
 
--- 6. Music player plugin (~/nvim-music)
-vim.opt.rtp:append(vim.fn.expand("~/nvim-music"))
-pcall(vim.cmd, "runtime plugin/music.lua")
-local music = require("music")
-vim.keymap.set("n", "<leader>mp", music.play_picker, { desc = "Pick music" })
-vim.keymap.set("n", "<leader>mu", music.play_url, { desc = "Play URL" })
-vim.keymap.set("n", "<leader>mn", music.next, { desc = "Next track" })
-vim.keymap.set("n", "<leader>mb", music.prev, { desc = "Prev track" })
-vim.keymap.set("n", "<leader>ms", music.stop, { desc = "Stop" })
-vim.keymap.set("n", "<leader>mx", music.toggle, { desc = "Pause/resume" })
-vim.keymap.set("n", "<leader>m=", music.volume_up, { desc = "Volume up" })
-vim.keymap.set("n", "<leader>m-", music.volume_down, { desc = "Volume down" })
+-- ── Music ───────────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>mp", music.play_picker,  { desc = "Pick music" })
+vim.keymap.set("n", "<leader>mu", music.play_url,     { desc = "Play URL" })
+vim.keymap.set("n", "<leader>mn", music.next,          { desc = "Next track" })
+vim.keymap.set("n", "<leader>mb", music.prev,          { desc = "Prev track" })
+vim.keymap.set("n", "<leader>ms", music.stop,          { desc = "Stop" })
+vim.keymap.set("n", "<leader>mx", music.toggle,        { desc = "Pause/resume" })
+vim.keymap.set("n", "<leader>m=", music.volume_up,     { desc = "Volume up" })
+vim.keymap.set("n", "<leader>m-", music.volume_down,   { desc = "Volume down" })
 vim.keymap.set("n", "<leader>m<space>", music.now_playing, { desc = "Now playing" })
-vim.keymap.set("n", "<leader>mq", music.quit, { desc = "Quit mpv" })
+vim.keymap.set("n", "<leader>mq", music.quit,          { desc = "Quit mpv" })

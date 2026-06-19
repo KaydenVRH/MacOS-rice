@@ -1,6 +1,6 @@
-# Oxocarbon Duotone — purple (#BE95FF) + teal (#42BEA6)
-OXO_PURPLE=0xffBE95FF
-OXO_TEAL=0xff42BEA6
+# Amber Amethyst — gold (#fbbf24) + purple (#a855f7)
+ACCENT=0xfffbbf24
+HIGHLIGHT=0xffa855f7
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
@@ -13,8 +13,8 @@ default=(
   padding_right=5
   icon.font="Hack Nerd Font:Bold:17.0"
   label.font="Hack Nerd Font:Bold:14.0"
-  icon.color=$OXO_PURPLE
-  label.color=$OXO_TEAL
+  icon.color=$ACCENT
+  label.color=$HIGHLIGHT
   icon.padding_left=4
   icon.padding_right=4
   label.padding_left=4
@@ -34,14 +34,14 @@ for sid in $(aerospace list-workspaces --all); do
         padding_right=1 \
         drawing=off \
         label="$sid" \
-        label.color=$OXO_PURPLE \
-        label.highlight_color=$OXO_TEAL \
+        label.color=$ACCENT \
+        label.highlight_color=$HIGHLIGHT \
         click_script="aerospace workspace $sid" \
         script="$CONFIG_DIR/plugins/aerospace.sh $sid"
 done
 
 sketchybar --add item chevron left \
-           --set chevron icon= label.drawing=off icon.color=$OXO_PURPLE \
+           --set chevron icon= label.drawing=off icon.color=$ACCENT \
            --add item front_app left \
            --set front_app icon.drawing=off \
            label.padding_left=32 \
