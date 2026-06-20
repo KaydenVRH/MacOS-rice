@@ -229,6 +229,13 @@ vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
+
+-- :q closes buffer, not neovim (like ked)
+vim.cmd([[cnoreabbrev q bdelete]])
+vim.cmd([[cnoreabbrev q! bdelete!]])
+vim.cmd([[cnoreabbrev wq w \| bdelete]])
+vim.keymap.set("n", "<leader>qq", "<cmd>qa<CR>", { silent = true, desc = "Quit all" })
+
 vim.cmd.colorscheme("amber")
 
 
@@ -280,7 +287,7 @@ require("lazy").setup({
           mode = "buffers",
           numbers = "none",
           indicator = { style = "underline" },
-          separator_style = "slant",
+          separator_style = "thin",
           diagnostics = "nvim_lsp",
           offsets = {
             { filetype = "neo-tree", text = "File Tree", text_align = "center" },
@@ -297,6 +304,39 @@ require("lazy").setup({
           close_button = { bg = "none" },
           close_button_selected = { bg = "none" },
           close_button_visible = { bg = "none" },
+        },
+      })
+    end,
+  },
+
+  -- ── NOICE ────────────────────────────────────────────────────
+  {
+    "folke/noice.nvim",
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+    config = function()
+      require("noice").setup({
+        presets = { bottom_search = true, command_palette = true, long_message_to_split = true },
+        messages = { view = "mini" },
+      })
+    end,
+  },
+
+  -- ── WHICH‑KEY ────────────────────────────────────────────────
+  {
+    "folke/which-key.nvim",
+    config = function()
+      require("which-key").setup({})
+    end,
+  },
+
+  -- ── GITSIGNS ─────────────────────────────────────────────────
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({
+        signs = {
+          add = { text = "│" }, change = { text = "│" }, delete = { text = "_" },
+          topdelete = { text = "‾" }, changedelete = { text = "~" },
         },
       })
     end,
@@ -539,6 +579,7 @@ local function clear_bg()
     "Normal", "NormalNC", "SignColumn", "MsgArea",
     "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopeResultsNormal",
     "NeoTreeNormal", "NeoTreeNormalNC",
+    "NoiceCmdlinePopup", "NoiceCmdlinePopupBorder", "NoiceMini",
     "ToggleTerm1FloatNormal", "ToggleTerm1FloatBorder",
   }
   for _, group in ipairs(groups) do

@@ -53,7 +53,7 @@ hi(0, "VertSplit",     { fg = c.bg_dark, bg = c.bg })
 hi(0, "StatusLine",    { fg = c.fg,      bg = c.bg_dark })
 hi(0, "StatusLineNC",  { fg = c.fg_dim,  bg = c.bg_dark })
 hi(0, "TabLine",       { fg = c.fg_dim,  bg = c.bg_dark })
-hi(0, "TabLineSel",    { fg = c.amber,   bg = c.purple, bold = true })
+hi(0, "TabLineSel",    { fg = c.fg,      bg = c.purple, bold = true })
 hi(0, "TabLineFill",   { bg = c.bg_dark })
 hi(0, "Pmenu",         { fg = c.fg,      bg = c.bg_light })
 hi(0, "PmenuSel",      { fg = c.bg,      bg = c.amber })
@@ -176,19 +176,104 @@ hi(0, "@tag.delimiter",         { fg = c.fg_dim })
 hi(0, "@tag.attribute",         { fg = c.amber })
 hi(0, "@none",                  { fg = c.fg })
 
--- ── Plugin overrides ───────────────────────────────────────────────
+-- ── Plugin overrides (duotone: fg_dim + purple accent) ──────────
 hi(0, "TelescopeNormal",        { fg = c.fg,      bg = c.bg })
-hi(0, "TelescopeBorder",        { fg = c.purple,  bg = c.bg })
+hi(0, "TelescopeBorder",        { fg = c.fg_dim,  bg = c.bg })
 hi(0, "TelescopePromptNormal",  { fg = c.fg,      bg = c.bg_dark })
-hi(0, "TelescopePromptBorder",  { fg = c.amber,   bg = c.bg_dark })
+hi(0, "TelescopePromptBorder",  { fg = c.fg_dim,  bg = c.bg_dark })
 hi(0, "TelescopeResultsNormal", { fg = c.fg,      bg = c.bg })
 hi(0, "TelescopeSelection",     { fg = c.fg,      bg = c.purple })
 hi(0, "NeoTreeNormal",           { fg = c.fg_dim,  bg = c.bg_dark })
 hi(0, "NeoTreeNormalNC",         { fg = c.fg_dim,  bg = c.bg_dark })
-hi(0, "NeoTreeDirectoryName",    { fg = c.blue })
-hi(0, "NeoTreeDirectoryIcon",    { fg = c.blue })
+hi(0, "NeoTreeDirectoryName",    { fg = c.purple })
+hi(0, "NeoTreeDirectoryIcon",    { fg = c.purple })
 hi(0, "NeoTreeRootName",         { fg = c.purple,  bold = true })
+hi(0, "NeoTreeCursorLine",       { fg = c.fg,      bg = c.amber })
 hi(0, "NeoTreeIndentMarker",     { fg = c.fg_dim })
-hi(0, "NeoTreeGitModified",      { fg = c.amber })
-hi(0, "NeoTreeGitAdded",         { fg = c.green })
-hi(0, "NeoTreeGitDeleted",       { fg = c.red })
+hi(0, "NeoTreeGitModified",      { fg = c.fg_dim })
+hi(0, "NeoTreeGitAdded",         { fg = c.fg_dim })
+hi(0, "NeoTreeGitDeleted",       { fg = c.fg_dim })
+
+-- ── Noice ─────────────────────────────────────────────────────────
+hi(0, "NoiceCmdlinePopup",        { fg = c.fg,      bg = c.bg_light })
+hi(0, "NoiceCmdlinePopupBorder",  { fg = c.fg_dim,  bg = c.bg_light })
+hi(0, "NoiceMini",                { fg = c.fg,      bg = c.bg_light })
+hi(0, "NoiceConfirmBorder",       { fg = c.fg_dim })
+
+-- ── Which‑Key (duotone) ───────────────────────────────────────────
+hi(0, "WhichKey",                 { fg = c.purple })
+hi(0, "WhichKeyDesc",             { fg = c.fg })
+hi(0, "WhichKeySeparator",        { fg = c.fg_dim })
+hi(0, "WhichKeyGroup",            { fg = c.purple })
+hi(0, "WhichKeyFloat",            { bg = c.bg_dark })
+hi(0, "WhichKeyBorder",           { fg = c.fg_dim })
+
+-- ── GitSigns (duotone) ────────────────────────────────────────────
+hi(0, "GitSignsAdd",              { fg = c.fg_dim })
+hi(0, "GitSignsChange",           { fg = c.fg_dim })
+hi(0, "GitSignsDelete",           { fg = c.fg_dim })
+
+-- ── LSP / Diagnostics extras ───────────────────────────────────────
+hi(0, "LspReferenceRead",         { bg = c.bg_light })
+hi(0, "LspReferenceWrite",        { bg = c.bg_light })
+hi(0, "LspReferenceText",         { bg = c.bg_light })
+hi(0, "LspSignatureActiveParameter", { bg = c.bg_light, bold = true })
+hi(0, "LspInlayHint",             { fg = c.fg_dim,  bg = c.bg })
+
+-- ── Completion menu (cmp) ──────────────────────────────────────────
+hi(0, "CmpItemAbbr",              { fg = c.fg })
+hi(0, "CmpItemAbbrMatch",         { fg = c.amber })
+hi(0, "CmpItemAbbrMatchFuzzy",    { fg = c.amber })
+hi(0, "CmpItemKind",              { fg = c.purple })
+hi(0, "CmpItemKindText",          { fg = c.fg })
+hi(0, "CmpItemKindMethod",        { fg = c.blue })
+hi(0, "CmpItemKindFunction",      { fg = c.blue })
+hi(0, "CmpItemKindConstructor",   { fg = c.amber })
+hi(0, "CmpItemKindVariable",      { fg = c.cyan })
+hi(0, "CmpItemKindClass",         { fg = c.amber_b })
+hi(0, "CmpItemKindInterface",     { fg = c.cyan_b })
+hi(0, "CmpItemKindModule",        { fg = c.purple })
+hi(0, "CmpItemKindProperty",      { fg = c.cyan })
+hi(0, "CmpItemKindUnit",          { fg = c.green })
+hi(0, "CmpItemKindKeyword",       { fg = c.purple })
+hi(0, "CmpItemKindSnippet",       { fg = c.green })
+hi(0, "CmpItemKindEnum",          { fg = c.amber })
+hi(0, "CmpItemMenu",              { fg = c.fg_dim })
+
+-- ── Float windows (duotone) ───────────────────────────────────────
+hi(0, "NormalFloat",              { fg = c.fg,      bg = c.bg_light })
+hi(0, "FloatBorder",              { fg = c.fg_dim,  bg = c.bg_light })
+hi(0, "FloatTitle",               { fg = c.purple,  bold = true })
+
+-- ── StatusLine (duotone) ──────────────────────────────────────────
+hi(0, "StatusLine",               { fg = c.fg,      bg = c.bg_dark })
+hi(0, "StatusLineNC",             { fg = c.fg_dim,  bg = c.bg_dark })
+
+-- ── Folds ──────────────────────────────────────────────────────────
+hi(0, "Folded",                   { fg = c.fg_dim,  bg = c.bg_light })
+hi(0, "FoldColumn",               { fg = c.fg_dim,  bg = c.bg })
+
+-- ── Quickfix ───────────────────────────────────────────────────────
+hi(0, "QuickFixLine",             { bg = c.bg_light, bold = true })
+
+-- ── Bufferline (tab bar, duotone) ────────────────────────────────
+hi(0, "BufferLineFill",           { bg = c.bg_dark })
+hi(0, "BufferLineTab",            { fg = c.fg_dim,  bg = c.bg })
+hi(0, "BufferLineTabSelected",    { fg = c.fg,      bg = c.bg, bold = true })
+hi(0, "BufferLineIndicatorSelected",  { fg = c.purple })
+hi(0, "BufferLineDiagnostic",     { fg = c.fg_dim })
+hi(0, "BufferLineHintDiagnostic", { fg = c.fg_dim })
+hi(0, "BufferLineInfoDiagnostic", { fg = c.fg_dim })
+hi(0, "BufferLineWarningDiagnostic", { fg = c.fg_dim })
+hi(0, "BufferLineErrorDiagnostic",   { fg = c.fg_dim })
+
+-- ── ToggleTerm ─────────────────────────────────────────────────────
+hi(0, "ToggleTerm1FloatNormal",   { fg = c.fg })
+hi(0, "ToggleTerm1FloatBorder",   { fg = c.fg_dim })
+
+-- ── Alpha Dashboard ────────────────────────────────────────────────
+hi(0, "AlphaHeader",              { fg = c.purple })
+hi(0, "AlphaHeaderLabel",         { fg = c.purple })
+hi(0, "AlphaButtons",             { fg = c.fg_dim })
+hi(0, "AlphaShortcut",            { fg = c.purple })
+hi(0, "AlphaFooter",              { fg = c.fg_dim })
