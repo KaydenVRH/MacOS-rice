@@ -1,11 +1,11 @@
-# Amber Amethyst — gold (#fbbf24) + purple (#a855f7)
-ACCENT=0xfffbbf24
-HIGHLIGHT=0xffa855f7
+# Bi — deep midnight blue-purple, vibrant blue/purple/magenta
+ACCENT=0xffb080f0
+HIGHLIGHT=0xff68a8f8
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Bar Appearance #####
-sketchybar --bar position=top height=38 blur_radius=0 color=0x8816161a
+sketchybar --bar position=top height=34 margin=12 y_offset=6 corner_radius=8 blur_radius=0 color=0x88141124
 
 ##### Changing Defaults #####
 default=(
@@ -70,14 +70,11 @@ sketchybar --add item clock right \
            --add item funny_guy right \
            --set funny_guy icon.drawing=off \
            label.drawing=off \
-           background.drawing=on \
-           background.color=0x00000000 \
-           background.image="$CONFIG_DIR/funny-guy.png" \
-           background.image.scale=0.025 \
-           background.image.corner_radius=2 \
-           background.height=4 \
-           padding_left=5 \
-            padding_right=5
+background.drawing=off \
+            background.color=0x00000000 \
+            background.height=0 \
+            padding_left=0 \
+             padding_right=0
 sketchybar --add item now_playing left \
            --set now_playing drawing=off \
            label.padding_left=28 \
