@@ -5,7 +5,7 @@ HIGHLIGHT=0xff68a8f8
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Bar Appearance #####
-sketchybar --bar position=top height=34 margin=12 y_offset=6 corner_radius=8 blur_radius=0 color=0x88141124
+sketchybar --bar position=top height=34 margin=2 y_offset=4 corner_radius=8 blur_radius=0 color=0x00000000 display=main
 
 ##### Changing Defaults #####
 default=(
@@ -24,7 +24,9 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 
+SPACES=()
 for sid in $(aerospace list-workspaces --all); do
+    SPACES+=("space.$sid")
     sketchybar --add item space.$sid left \
         --subscribe space.$sid aerospace_workspace_change \
         --set space.$sid \
@@ -44,15 +46,15 @@ sketchybar --add item chevron left \
            --set chevron icon= label.drawing=off icon.color=$ACCENT \
            --add item front_app left \
            --set front_app icon.drawing=off \
-           label.padding_left=32 \
-           background.height=28 \
+            label.padding_left=32 \
+            background.height=34 \
            background.corner_radius=5 \
-           script="$PLUGIN_DIR/front_app.sh" \
-           --subscribe front_app front_app_switched
+            script="$PLUGIN_DIR/front_app.sh" \
+            --subscribe front_app front_app_switched
 
 ##### Adding Right Items #####
 sketchybar --add item clock right \
-           --set clock update_freq=10 icon= script="$PLUGIN_DIR/clock.sh" \
+            --set clock update_freq=10 icon= script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
@@ -67,22 +69,51 @@ sketchybar --add item clock right \
            --set wifi update_freq=10 icon= script="$PLUGIN_DIR/wifi.sh" \
            --add item bluetooth right \
            --set bluetooth update_freq=30 icon= script="$PLUGIN_DIR/bluetooth.sh" \
-           --add item funny_guy right \
-           --set funny_guy icon.drawing=off \
-           label.drawing=off \
-background.drawing=off \
+            --add item funny_guy right \
+            --set funny_guy icon.drawing=off \
+            label.drawing=off \
+            background.drawing=on \
             background.color=0x00000000 \
-            background.height=0 \
-            padding_left=0 \
-             padding_right=0
+            background.image="$CONFIG_DIR/funny-guy.png" \
+            background.image.scale=0.025 \
+            background.image.corner_radius=2 \
+            background.height=34 \
+            padding_left=5 \
+            padding_right=5
 sketchybar --add item now_playing left \
-           --set now_playing drawing=off \
-           label.padding_left=28 \
-           label.max_chars=35 \
+           --set now_playing \
+            label.drawing=on \
+            label="--" \
+            label.padding_left=14 \
+            label.padding_right=14 \
+            label.max_chars=35 \
            scroll_texts=on \
-           background.height=28 \
+           background.drawing=on \
+           background.color=0xb2141124 \
+           background.corner_radius=8 \
+           background.height=34 \
            script="$PLUGIN_DIR/now_playing.sh" \
            update_freq=5 \
            --subscribe now_playing media_change
+
+sketchybar --add item brew left \
+           --set brew \
+            icon= \
+            icon.padding_left=12 \
+            icon.padding_right=6 \
+            label.padding_right=12 \
+            label.drawing=off \
+           background.drawing=on \
+           background.color=0xb2141124 \
+           background.corner_radius=8 \
+           background.height=34 \
+           script="$PLUGIN_DIR/brew.sh" \
+           update_freq=3600
+
+sketchybar --add bracket left_group ${SPACES[@]} chevron front_app \
+           --set left_group background.color=0xb2141124 background.corner_radius=8 background.height=34
+
+sketchybar --add bracket right_group clock volume battery cpu ram wifi bluetooth funny_guy \
+           --set right_group background.color=0xb2141124 background.corner_radius=8 background.height=34
 
 sketchybar --update

@@ -11,6 +11,7 @@ music._current_name = nil
 music._playlist = nil
 music._playlist_idx = 0
 music._quitting = false
+music._loop = false
 
 -- Kill mpv on exit to prevent orphans
 vim.api.nvim_create_autocmd("VimLeavePre", {
@@ -31,14 +32,20 @@ end
 
 function music._spawn(args)
   if music._quitting then return end
+  local saved_name = music._current_name
+  local saved_playlist = music._playlist
+  local saved_idx = music._playlist_idx
   music.stop()
+  music._current_name = saved_name
+  music._playlist = saved_playlist
+  music._playlist_idx = saved_idx
   os.execute("rm -f " .. music._socket)
   table.insert(args, "--input-ipc-server=" .. music._socket)
   current_job_id = current_job_id + 1
   local this_id = current_job_id
   mpv_job = vim.fn.jobstart(args, {
     on_exit = function()
-      if current_job_id ~= this_id then return end -- stale job
+      if current_job_id ~= this_id then return end
       mpv_job = nil
       music._current_name = nil
       music._play_next()
@@ -52,6 +59,9 @@ function music._play_next()
     music._playlist_idx = music._playlist_idx + 1
     if music._playlist_idx <= #music._playlist then
       music.play(music._playlist[music._playlist_idx])
+    elseif music._loop then
+      music._playlist_idx = 1
+      music.play(music._playlist[1])
     else
       music._playlist = nil
       music._playlist_idx = 0
@@ -190,10 +200,20 @@ end
 
 function music.now_playing()
   if music._current_name then
-    vim.notify("♪ " .. music._current_name)
+    local total = music._playlist and #music._playlist or 0
+    local idx = music._playlist_idx
+    local info = "♪ " .. music._current_name
+    if total > 0 then info = info .. " [" .. idx .. "/" .. total .. "]" end
+    if music._loop then info = info .. " 🔁" end
+    vim.notify(info)
   else
     vim.notify("♪ nothing playing")
   end
+end
+
+function music.toggle_loop()
+  music._loop = not music._loop
+  vim.notify("♪ loop " .. (music._loop and "on 🔁" or "off"))
 end
 
 function music.quit()
@@ -236,7 +256,8 @@ vim.cmd([[cnoreabbrev q! bdelete!]])
 vim.cmd([[cnoreabbrev wq w \| bdelete]])
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<CR>", { silent = true, desc = "Quit all" })
 
-vim.cmd.colorscheme("amber")
+vim.cmd.colorscheme("bi")
+require("rainbow")
 
 
 -- ═══════════════════════════════════════════════════════════════════
@@ -259,7 +280,32 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function() require("telescope").setup({}) end,
+    config = function()
+      local ok, _ = pcall(vim.fn.system, { "fd", "--version" })
+      local find_cmd = ok and vim.v.shell_error == 0 and {
+        "fd", "--type", "f", "--hidden",
+        "--exclude", ".git", "--exclude", "Library",
+        "--exclude", "node_modules", "--exclude", ".Trash",
+        "--exclude", ".cache", "--exclude", ".local/share",
+        "--exclude", ".cargo",
+      } or nil
+
+      require("telescope").setup({
+        defaults = {
+          file_ignore_patterns = {
+            "Library/", ".Trash/", ".local/", ".cache/", ".cargo/",
+            "%.pyc", "__pycache__", "node_modules", ".git/",
+            "%.o", "%.class", "%.dSYM",
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+            find_command = find_cmd,
+          },
+        },
+      })
+    end,
   },
 
   -- ── STATUSLINE ────────────────────────────────────────────────
@@ -267,8 +313,24 @@ require("lazy").setup({
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+      local c = {
+        bg     = "none",
+        fg     = "#d4d8ee",
+        dim    = "#5a5282",
+        purple = "#b080f0",
+        blue   = "#68a8f8",
+      }
       require("lualine").setup({
-        options = { theme = "auto" },
+        options = {
+          theme = {
+            normal   = { a = { fg = "#141124", bg = c.purple, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            insert   = { a = { fg = "#141124", bg = c.blue,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            visual   = { a = { fg = "#141124", bg = c.purple, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            replace  = { a = { fg = "#141124", bg = "#f080c0", gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            command  = { a = { fg = "#141124", bg = c.blue,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            inactive = { a = { fg = c.dim,    bg = c.bg }, b = { fg = c.dim, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+          },
+        },
         sections = {
           lualine_c = { { music.current } },
         },
@@ -289,6 +351,7 @@ require("lazy").setup({
           indicator = { style = "underline" },
           separator_style = "thin",
           diagnostics = "nvim_lsp",
+          themable = false,
           offsets = {
             { filetype = "neo-tree", text = "File Tree", text_align = "center" },
           },
@@ -577,10 +640,17 @@ require("lazy").setup({
 local function clear_bg()
   local groups = {
     "Normal", "NormalNC", "SignColumn", "MsgArea",
-    "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopeResultsNormal",
+    "TelescopeNormal", "TelescopeBorder", "TelescopePromptNormal", "TelescopePromptBorder",
+    "TelescopeResultsNormal", "TelescopeResultsBorder", "TelescopePreviewNormal", "TelescopePreviewBorder",
+    "TelescopeTitle", "TelescopeMultiSelection", "TelescopeMatching", "TelescopeSelectionCaret",
+    "TelescopePromptPrefix", "TelescopePromptTitle",
     "NeoTreeNormal", "NeoTreeNormalNC",
     "NoiceCmdlinePopup", "NoiceCmdlinePopupBorder", "NoiceMini",
+    "NoiceCmdline", "NoiceInput",
     "ToggleTerm1FloatNormal", "ToggleTerm1FloatBorder",
+    "StatusLine", "StatusLineNC", "TabLine", "TabLineFill", "TabLineSel",
+    "WinBar", "WinBarNC",
+    "LineNr", "LineNrAbove", "LineNrBelow", "CursorLineNr",
   }
   for _, group in ipairs(groups) do
     vim.api.nvim_set_hl(0, group, { bg = "none", ctermbg = "none" })
@@ -589,6 +659,11 @@ end
 
 vim.api.nvim_create_autocmd("ColorScheme", { callback = clear_bg })
 clear_bg()
+-- plugins load after startup; clear again once everything is ready
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function() vim.schedule(clear_bg) end,
+  once = true,
+})
 
 
 -- ═══════════════════════════════════════════════════════════════════
@@ -597,7 +672,11 @@ clear_bg()
 
 -- ── General ─────────────────────────────────────────────────────
 local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files (cwd)" })
+vim.keymap.set("n", "<leader>fp", function() builtin.find_files({ cwd = vim.fn.expand("~/programs/projects") }) end, { desc = "Find projects" })
+vim.keymap.set("n", "<leader>fd", function() builtin.find_files({ cwd = vim.fn.expand("~/dotfiles") }) end, { desc = "Find dotfiles" })
+vim.keymap.set("n", "<leader>fw", function() builtin.find_files({ cwd = vim.fn.expand("~/Downloads") }) end, { desc = "Find downloads" })
+vim.keymap.set("n", "<leader>fD", function() builtin.find_files({ cwd = vim.fn.expand("~/Documents") }) end, { desc = "Find documents" })
 vim.keymap.set("n", "<leader>e",  ":Neotree toggle<CR>", { silent = true, desc = "File tree" })
 vim.keymap.set("n", "<leader>tt", ":ToggleTerm direction=float<CR>", { silent = true, desc = "Terminal" })
 
@@ -656,3 +735,7 @@ vim.keymap.set("n", "<leader>m=", music.volume_up,     { desc = "Volume up" })
 vim.keymap.set("n", "<leader>m-", music.volume_down,   { desc = "Volume down" })
 vim.keymap.set("n", "<leader>m<space>", music.now_playing, { desc = "Now playing" })
 vim.keymap.set("n", "<leader>mq", music.quit,          { desc = "Quit mpv" })
+vim.keymap.set("n", "<leader>ml", music.toggle_loop,   { desc = "Toggle loop" })
+
+-- ── Rainbow ──────────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>ur", "<cmd>Rainbow<CR>", { desc = "Toggle rainbow hues" })
