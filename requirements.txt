@@ -1,0 +1,12 @@
+required software for the base dotfiles to run: 
+
+
+kitty
+jankyborders
+mpv
+nvim
+sketchybar
+stow
+tmux (optional)
+aerospace
+
