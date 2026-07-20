@@ -256,7 +256,7 @@ vim.cmd([[cnoreabbrev q! bdelete!]])
 vim.cmd([[cnoreabbrev wq w \| bdelete]])
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<CR>", { silent = true, desc = "Quit all" })
 
-vim.cmd.colorscheme("bi")
+vim.cmd.colorscheme("mono")
 require("rainbow")
 
 
@@ -315,20 +315,20 @@ require("lazy").setup({
     config = function()
       local c = {
         bg     = "none",
-        fg     = "#d4d8ee",
-        dim    = "#5a5282",
-        purple = "#b080f0",
-        blue   = "#68a8f8",
+        fg     = "#e0e0e0",
+        dim    = "#606060",
+        accent = "#d0d0d0",
+        mid    = "#a0a0a0",
       }
       require("lualine").setup({
         options = {
           theme = {
-            normal   = { a = { fg = "#141124", bg = c.purple, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
-            insert   = { a = { fg = "#141124", bg = c.blue,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
-            visual   = { a = { fg = "#141124", bg = c.purple, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
-            replace  = { a = { fg = "#141124", bg = "#f080c0", gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
-            command  = { a = { fg = "#141124", bg = c.blue,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
-            inactive = { a = { fg = c.dim,    bg = c.bg }, b = { fg = c.dim, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            normal   = { a = { fg = "#1a1a1a", bg = c.accent, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            insert   = { a = { fg = "#1a1a1a", bg = c.mid,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            visual   = { a = { fg = "#1a1a1a", bg = c.accent, gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            replace  = { a = { fg = "#1a1a1a", bg = c.dim,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            command  = { a = { fg = "#1a1a1a", bg = c.mid,   gui = "bold" }, b = { fg = c.fg, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
+            inactive = { a = { fg = c.dim,     bg = c.bg }, b = { fg = c.dim, bg = c.bg }, c = { fg = c.dim, bg = c.bg } },
           },
         },
         sections = {

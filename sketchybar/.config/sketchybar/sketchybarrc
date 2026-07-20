@@ -1,6 +1,6 @@
-# Bi — deep midnight blue-purple, vibrant blue/purple/magenta
-ACCENT=0xffb080f0
-HIGHLIGHT=0xff68a8f8
+# Monochrome — clean grayscale
+ACCENT=0xffd0d0d0
+HIGHLIGHT=0xff808080
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
