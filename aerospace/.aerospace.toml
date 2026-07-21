@@ -109,8 +109,10 @@ on-mode-changed = []
     # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
     # You can uncomment the following lines to open up terminal with alt + enter shortcut
     # (like in i3)
-     alt-enter = 'exec-and-forget ratty'
+     alt-s = 'exec-and-forget SCRIPTS_DIR="$HOME/dotfiles/scripts"; sel="$(find "$SCRIPTS_DIR" -maxdepth 1 -type f -name "*.sh" -print | choose)"; [ -n "$sel" ] && bash "$sel"'
 
+     alt-a = 'exec-and-forget sel="$(find /Applications /System/Applications -maxdepth 1 -type d -name "*.app" -print 2>/dev/null | choose)"; [ -n "$sel" ] && open "$sel"'
+    
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
 
