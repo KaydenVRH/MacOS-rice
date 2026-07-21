@@ -74,8 +74,8 @@ sketchybar --add item clock right \
             label.drawing=off \
             background.drawing=on \
             background.color=0x00000000 \
-            background.image="$CONFIG_DIR/funny-guy.png" \
-            background.image.scale=0.025 \
+            background.image="$CONFIG_DIR/solver_rice.png" \
+            background.image.scale=0.030 \
             background.image.corner_radius=2 \
             background.height=34 \
             padding_left=5 \
@@ -89,7 +89,7 @@ sketchybar --add item now_playing left \
             label.max_chars=35 \
            scroll_texts=on \
            background.drawing=on \
-           background.color=0xb2141124 \
+           background.color=0xb31a1a1a \
            background.corner_radius=8 \
            background.height=34 \
            script="$PLUGIN_DIR/now_playing.sh" \
@@ -104,16 +104,16 @@ sketchybar --add item brew left \
             label.padding_right=12 \
             label.drawing=off \
            background.drawing=on \
-           background.color=0xb2141124 \
+           background.color=0xb31a1a1a \
            background.corner_radius=8 \
            background.height=34 \
            script="$PLUGIN_DIR/brew.sh" \
            update_freq=3600
 
 sketchybar --add bracket left_group ${SPACES[@]} chevron front_app \
-           --set left_group background.color=0xb2141124 background.corner_radius=8 background.height=34
+           --set left_group background.color=0xb31a1a1a background.corner_radius=8 background.height=34
 
 sketchybar --add bracket right_group clock volume battery cpu ram wifi bluetooth funny_guy \
-           --set right_group background.color=0xb2141124 background.corner_radius=8 background.height=34
+           --set right_group background.color=0xb31a1a1a background.corner_radius=8 background.height=34
 
 sketchybar --update
