@@ -5,38 +5,38 @@ local started = false
 local tick_handle = nil
 local frame = 0
 
--- All highlight groups from mono theme, with their original fg hex
+-- All highlight groups from everforest theme, with their original fg hex
 local groups = {
-  Normal       = "#e0e0e0", NormalNC     = "#606060", SignColumn = "#e0e0e0",
-  MsgArea      = "#e0e0e0", Cursor       = "#d0d0d0", CursorLine  = nil,
-  CursorLineNr = "#d0d0d0", LineNr       = "#606060", FoldColumn   = "#606060",
-  Visual       = "#e0e0e0", Search       = "#d0d0d0", IncSearch    = "#e0e0e0",
-  Substitute   = "#a0a0a0", MatchParen   = "#d0d0d0", ColorColumn  = nil,
-  Whitespace   = "#303030", NonText      = "#606060", SpecialKey   = "#606060",
-  VertSplit    = "#111111", StatusLine   = "#e0e0e0", StatusLineNC = "#606060",
-  TabLine      = "#606060", TabLineSel   = "#e0e0e0", TabLineFill  = nil,
-  Pmenu        = "#e0e0e0", PmenuSel     = "#d0d0d0", PmenuSbar    = nil,
-  PmenuThumb   = "#606060", Question     = "#d0d0d0", ErrorMsg     = "#a0a0a0",
-  WarningMsg   = "#d0d0d0", ModeMsg      = "#d0d0d0", MoreMsg      = "#808080",
-  Title        = "#d0d0d0", Directory    = "#808080", qfLineNr     = "#d0d0d0",
-  qfFileName   = "#d0d0d0", WinSeparator = "#111111", EndOfBuffer  = "#1a1a1a",
+  Normal       = "#d3c6aa", NormalNC     = "#859289", SignColumn = "#d3c6aa",
+  MsgArea      = "#d3c6aa", Cursor       = "#83c092", CursorLine  = nil,
+  CursorLineNr = "#83c092", LineNr       = "#859289", FoldColumn   = "#859289",
+  Visual       = "#d3c6aa", Search       = "#dbbc7f", IncSearch    = "#e69875",
+  Substitute   = "#a7c080", MatchParen   = "#83c092", ColorColumn  = nil,
+  Whitespace   = "#343f44", NonText      = "#859289", SpecialKey   = "#859289",
+  VertSplit    = "#232a2e", StatusLine   = "#d3c6aa", StatusLineNC = "#859289",
+  TabLine      = "#859289", TabLineSel   = "#d3c6aa", TabLineFill  = nil,
+  Pmenu        = "#d3c6aa", PmenuSel     = "#83c092", PmenuSbar    = nil,
+  PmenuThumb   = "#859289", Question     = "#83c092", ErrorMsg     = "#e67e80",
+  WarningMsg   = "#dbbc7f", ModeMsg      = "#83c092", MoreMsg      = "#7fbbb3",
+  Title        = "#83c092", Directory    = "#7fbbb3", qfLineNr     = "#83c092",
+  qfFileName   = "#83c092", WinSeparator = "#232a2e", EndOfBuffer  = "#2d353b",
   -- Syntax
-  Comment      = "#606060", Constant      = "#d0d0d0", String       = "#a0a0a0",
-  Character    = "#a0a0a0", Number        = "#f0f0f0", Boolean      = "#d0d0d0",
-  Float        = "#f0f0f0", Identifier    = "#e0e0e0", Function     = "#808080",
-  Statement    = "#d0d0d0", Conditional   = "#d0d0d0", Repeat       = "#d0d0d0",
-  Label        = "#606060", Operator      = "#606060", Keyword      = "#d0d0d0",
-  Exception    = "#a0a0a0", PreProc       = "#d0d0d0", Include      = "#d0d0d0",
-  Define       = "#d0d0d0", Macro         = "#d0d0d0", PreCondit    = "#606060",
-  Type         = "#606060", StorageClass  = "#d0d0d0", Structure    = "#606060",
-  Typedef      = "#606060", Special       = "#d0d0d0", SpecialChar  = "#d0d0d0",
-  Tag          = "#d0d0d0", Delimiter     = "#e0e0e0", SpecialComment = "#606060",
-  Debug        = "#a0a0a0", Error         = "#a0a0a0", Todo         = "#d0d0d0",
+  Comment      = "#859289", Constant      = "#e69875", String       = "#a7c080",
+  Character    = "#a7c080", Number        = "#e69875", Boolean      = "#d699b6",
+  Float        = "#e69875", Identifier    = "#d3c6aa", Function     = "#7fbbb3",
+  Statement    = "#d699b6", Conditional   = "#d699b6", Repeat       = "#d699b6",
+  Label        = "#83c092", Operator      = "#83c092", Keyword      = "#d699b6",
+  Exception    = "#e67e80", PreProc       = "#e69875", Include      = "#d699b6",
+  Define       = "#d699b6", Macro         = "#e69875", PreCondit    = "#83c092",
+  Type         = "#83c092", StorageClass  = "#d699b6", Structure    = "#83c092",
+  Typedef      = "#83c092", Special       = "#e69875", SpecialChar  = "#e69875",
+  Tag          = "#d699b6", Delimiter     = "#d3c6aa", SpecialComment = "#859289",
+  Debug        = "#e67e80", Error         = "#e67e80", Todo         = "#dbbc7f",
   -- Plugin overrides
-  NeoTreeDirectoryName = "#d0d0d0", NeoTreeDirectoryIcon = "#d0d0d0",
-  NeoTreeRootName      = "#d0d0d0", NeoTreeCursorLine    = "#e0e0e0",
-  NeoTreeIndentMarker  = "#606060",
-  TelescopeSelection   = "#e0e0e0",
+  NeoTreeDirectoryName = "#83c092", NeoTreeDirectoryIcon = "#83c092",
+  NeoTreeRootName      = "#83c092", NeoTreeCursorLine    = "#d3c6aa",
+  NeoTreeIndentMarker  = "#859289",
+  TelescopeSelection   = "#d3c6aa",
   QuickFixLine         = nil,
 }
 
@@ -114,7 +114,7 @@ end
 local function M_stop()
   started = false
   tick_handle = nil
-  vim.cmd("colorscheme mono")
+  vim.cmd("colorscheme everforest")
   vim.notify("🌈 rainbow off")
 end
 

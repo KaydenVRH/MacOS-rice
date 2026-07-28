@@ -1,6 +1,6 @@
-# Monochrome — clean grayscale
-ACCENT=0xffd0d0d0
-HIGHLIGHT=0xff808080
+# Everforest — nature-inspired, muted greens, warm earth tones
+ACCENT=0xff83c092
+HIGHLIGHT=0xff7fbbb3
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
@@ -67,19 +67,18 @@ sketchybar --add item clock right \
            --set ram update_freq=5 icon= script="$PLUGIN_DIR/ram.sh" \
            --add item wifi right \
            --set wifi update_freq=10 icon= script="$PLUGIN_DIR/wifi.sh" \
-           --add item bluetooth right \
-           --set bluetooth update_freq=30 icon= script="$PLUGIN_DIR/bluetooth.sh" \
-            --add item funny_guy right \
-            --set funny_guy icon.drawing=off \
-            label.drawing=off \
-            background.drawing=on \
-            background.color=0x00000000 \
-            background.image="$CONFIG_DIR/solver_rice.png" \
-            background.image.scale=0.030 \
-            background.image.corner_radius=2 \
-            background.height=34 \
-            padding_left=5 \
-            padding_right=5
+            --add item bluetooth right \
+            --set bluetooth update_freq=30 icon= script="$PLUGIN_DIR/bluetooth.sh" \
+            --add item brew right \
+            --set brew \
+             icon= \
+             icon.padding_left=4 \
+             icon.padding_right=4 \
+             label.padding_right=4 \
+             label.drawing=off \
+             script="$PLUGIN_DIR/brew.sh" \
+             update_freq=3600
+
 sketchybar --add item now_playing left \
            --set now_playing \
             label.drawing=on \
@@ -89,31 +88,17 @@ sketchybar --add item now_playing left \
             label.max_chars=35 \
            scroll_texts=on \
            background.drawing=on \
-           background.color=0xb31a1a1a \
+           background.color=0xb32d353b \
            background.corner_radius=8 \
            background.height=34 \
            script="$PLUGIN_DIR/now_playing.sh" \
            update_freq=5 \
            --subscribe now_playing media_change
 
-sketchybar --add item brew left \
-           --set brew \
-            icon= \
-            icon.padding_left=12 \
-            icon.padding_right=6 \
-            label.padding_right=12 \
-            label.drawing=off \
-           background.drawing=on \
-           background.color=0xb31a1a1a \
-           background.corner_radius=8 \
-           background.height=34 \
-           script="$PLUGIN_DIR/brew.sh" \
-           update_freq=3600
-
 sketchybar --add bracket left_group ${SPACES[@]} chevron front_app \
-           --set left_group background.color=0xb31a1a1a background.corner_radius=8 background.height=34
+           --set left_group background.color=0xb32d353b background.corner_radius=8 background.height=34
 
-sketchybar --add bracket right_group clock volume battery cpu ram wifi bluetooth funny_guy \
-           --set right_group background.color=0xb31a1a1a background.corner_radius=8 background.height=34
+sketchybar --add bracket right_group clock volume battery cpu ram wifi bluetooth brew \
+           --set right_group background.color=0xb32d353b background.corner_radius=8 background.height=34
 
 sketchybar --update

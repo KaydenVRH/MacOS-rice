@@ -112,7 +112,9 @@ on-mode-changed = []
      alt-s = 'exec-and-forget SCRIPTS_DIR="$HOME/dotfiles/scripts"; sel="$(find "$SCRIPTS_DIR" -maxdepth 1 -type f -name "*.sh" -print | choose)"; [ -n "$sel" ] && bash "$sel"'
 
      alt-a = 'exec-and-forget sel="$(find /Applications /System/Applications -maxdepth 1 -type d -name "*.app" -print 2>/dev/null | choose)"; [ -n "$sel" ] && open "$sel"'
-    
+
+     alt-m = 'exec-and-forget MUSIC_DIR="$HOME/Music"; sel="$(cd "$MUSIC_DIR" && find . -maxdepth 999 -type f \( -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.aac" -o -iname "*.flac" -o -iname "*.wav" -o -iname "*.ogg" \) -print | sed "s|^\./||" | choose)"; [ -n "$sel" ] && mpv "$MUSIC_DIR/$sel"'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
 
