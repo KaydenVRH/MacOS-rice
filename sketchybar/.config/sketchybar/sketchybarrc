@@ -1,6 +1,6 @@
 # Everforest — nature-inspired, muted greens, warm earth tones
-ACCENT=0xff83c092
-HIGHLIGHT=0xff7fbbb3
+ACCENT=0xff89cff0
+HIGHLIGHT=0xff6ba3ff
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
@@ -66,9 +66,9 @@ sketchybar --add item clock right \
            --add item ram right \
            --set ram update_freq=5 icon= script="$PLUGIN_DIR/ram.sh" \
            --add item wifi right \
-           --set wifi update_freq=10 icon= script="$PLUGIN_DIR/wifi.sh" \
-            --add item bluetooth right \
-            --set bluetooth update_freq=30 icon= script="$PLUGIN_DIR/bluetooth.sh" \
+           --set wifi update_freq=10 icon= icon.color=0xffa7c080 script="$PLUGIN_DIR/wifi.sh" \
+           --add item bluetooth right \
+           --set bluetooth update_freq=30 icon= icon.color=0xffa7c080 script="$PLUGIN_DIR/bluetooth.sh" \
             --add item brew right \
             --set brew \
              icon= \
@@ -81,24 +81,24 @@ sketchybar --add item clock right \
 
 sketchybar --add item now_playing left \
            --set now_playing \
-            label.drawing=on \
-            label="--" \
-            label.padding_left=14 \
-            label.padding_right=14 \
-            label.max_chars=35 \
-           scroll_texts=on \
-           background.drawing=on \
-           background.color=0xb32d353b \
-           background.corner_radius=8 \
-           background.height=34 \
-           script="$PLUGIN_DIR/now_playing.sh" \
-           update_freq=5 \
-           --subscribe now_playing media_change
+             label.drawing=on \
+             label="--" \
+             label.padding_left=14 \
+             label.padding_right=14 \
+             label.max_chars=35 \
+            scroll_texts=on \
+            background.drawing=on \
+            background.color=0xCC0e1419 \
+            background.corner_radius=6 \
+            background.height=28 \
+            script="$PLUGIN_DIR/now_playing.sh" \
+            update_freq=5 \
+            --subscribe now_playing media_change
 
 sketchybar --add bracket left_group ${SPACES[@]} chevron front_app \
-           --set left_group background.color=0xb32d353b background.corner_radius=8 background.height=34
+           --set left_group background.color=0xCC0e1419 background.corner_radius=6 background.height=28
 
 sketchybar --add bracket right_group clock volume battery cpu ram wifi bluetooth brew \
-           --set right_group background.color=0xb32d353b background.corner_radius=8 background.height=34
+           --set right_group background.color=0xCC0e1419 background.corner_radius=6 background.height=28
 
 sketchybar --update
