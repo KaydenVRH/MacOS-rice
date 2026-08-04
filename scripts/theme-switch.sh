@@ -6,6 +6,7 @@
 
 set -euo pipefail
 
+HOME="${HOME:-/Users/$(whoami)}"
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 KITTY_CONF_PATH="$DOTFILES/kitty/.config/kitty/kitty.conf"
 NVIM_INIT="$DOTFILES/nvim/.config/nvim/init.lua"
@@ -95,18 +96,40 @@ theme_cherry_blossom() {
 theme_blue_lagoon() {
   DISPLAY="Blue Lagoon"
   KITTY_THEME="blue-lagoon.conf"
-  NVIM_CS="mono"
+  NVIM_CS="blue-lagoon"
   SB_ACCENT="0xff89cff0"
   SB_HIGHLIGHT="0xff6ba3ff"
   SB_BG="0xCC0e1419"
   WALLPAPER="$DOTFILES/wallpapers/blue-lagoon.jpg"
   LV_FG="#e8f0f8"
   LV_DIM="#8ba0b0"
-  LV_ACCENT="#89cff0"
-  LV_MID="#6ba3ff"
+  LV_ACCENT="#6ba3ff"
+  LV_MID="#7ecfd4"
+}
+
+theme_amethyst_lagoon() {
+  DISPLAY="Amethyst Lagoon"
+  KITTY_THEME="amethyst-lagoon.conf"
+  NVIM_CS="amethyst-lagoon"
+  SB_ACCENT="0xffa78bfa"
+  SB_HIGHLIGHT="0xffb8a4f0"
+  SB_BG="0xCC120e1a"
+  WALLPAPER=""
+  LV_FG="#e8e0f0"
+  LV_DIM="#8a80a0"
+  LV_ACCENT="#a78bfa"
+  LV_MID="#b8a4f0"
 }
 
 # ── Helpers ────────────────────────────────────────────────────────
+
+# Write perl output to file without changing inode (preserves file watchers)
+_replace_inplace() {
+  local file="$1" expr="$2"
+  local tmp
+  tmp=$(mktemp)
+  perl -pe "$expr" "$file" > "$tmp" && cat "$tmp" > "$file" && rm -f "$tmp"
+}
 
 list_themes() {
   declare -F | sed -n 's/^declare -f theme_//p' | sort
@@ -120,34 +143,36 @@ apply_theme() {
   "theme_${func}"
 
   # ── Kitty ──────────────────────────────────────────────────────
-  if [ -n "${KITTY_THEME:-}" ] && [ -f "$DOTFILES/kitty/.config/kitty/$KITTY_THEME" ]; then
-    sed -i '' "s/^include .*/include ${KITTY_THEME}/" "$KITTY_CONF_PATH"
+  if [ -n "${KITTY_THEME:-}" ]; then
+    _replace_inplace "$KITTY_CONF_PATH" 's/^include .*/include '"${KITTY_THEME}"'/'
   fi
 
   # ── Neovim colorscheme ─────────────────────────────────────────
   if [ -n "${NVIM_CS:-}" ]; then
-    sed -i '' 's/vim\.cmd\.colorscheme("[^"]*")/vim.cmd.colorscheme("'"${NVIM_CS}"'")/' "$NVIM_INIT"
+    _replace_inplace "$NVIM_INIT" 's/vim\.cmd\.colorscheme\("[^"]*"\)/vim.cmd.colorscheme("'"${NVIM_CS}"'")/'
   fi
 
   # ── Neovim lualine ─────────────────────────────────────────────
   if [ -n "${LV_FG:-}" ]; then
-    sed -i '' "/local c = {/,/^[[:space:]]*}/{
-      s/fg *= *\"[^\"]*\"/fg     = \"${LV_FG}\"/
-      s/dim *= *\"[^\"]*\"/dim    = \"${LV_DIM}\"/
-      s/accent *= *\"[^\"]*\"/accent = \"${LV_ACCENT}\"/
-      s/mid *= *\"[^\"]*\"/mid    = \"${LV_MID}\"/
-    }" "$NVIM_INIT"
+    _replace_inplace "$NVIM_INIT" '
+      if(/local c = \{/ .. /^\s*\}/){
+        s/fg *= *"[^"]*"/fg     = "'"${LV_FG}"'"/;
+        s/dim *= *"[^"]*"/dim    = "'"${LV_DIM}"'"/;
+        s/accent *= *"[^"]*"/accent = "'"${LV_ACCENT}"'"/;
+        s/mid *= *"[^"]*"/mid    = "'"${LV_MID}"'"/;
+      }
+    '
   fi
 
   # ── Sketchybar ─────────────────────────────────────────────────
   if [ -n "${SB_ACCENT:-}" ]; then
-    sed -i '' "s/^ACCENT=.*/ACCENT=${SB_ACCENT}/" "$SB_RC"
+    _replace_inplace "$SB_RC" 's/^ACCENT=.*/ACCENT='"${SB_ACCENT}"'/'
   fi
   if [ -n "${SB_HIGHLIGHT:-}" ]; then
-    sed -i '' "s/^HIGHLIGHT=.*/HIGHLIGHT=${SB_HIGHLIGHT}/" "$SB_RC"
+    _replace_inplace "$SB_RC" 's/^HIGHLIGHT=.*/HIGHLIGHT='"${SB_HIGHLIGHT}"'/'
   fi
   if [ -n "${SB_BG:-}" ]; then
-    sed -i '' "s/background\.color=0x[0-9a-fA-F]*/background.color=${SB_BG}/g" "$SB_RC"
+    _replace_inplace "$SB_RC" 's/background\.color=0x[0-9a-fA-F]*/background.color='"${SB_BG}"'/g'
   fi
 
   # ── Wallpaper ────────────────────────────────────────────────
@@ -156,7 +181,6 @@ apply_theme() {
   fi
 
   # ── Reload ─────────────────────────────────────────────────────
-  kitty @ load-config 2>/dev/null || true
   sketchybar --reload 2>/dev/null || true
 
   echo ""

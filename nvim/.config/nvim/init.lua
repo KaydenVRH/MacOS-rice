@@ -256,7 +256,7 @@ vim.cmd([[cnoreabbrev q! bdelete!]])
 vim.cmd([[cnoreabbrev wq w \| bdelete]])
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<CR>", { silent = true, desc = "Quit all" })
 
-vim.cmd.colorscheme("mono")
+vim.cmd.colorscheme("amethyst-lagoon")
 require("rainbow")
 
 
@@ -315,10 +315,10 @@ require("lazy").setup({
     config = function()
       local c = {
         bg     = "none",
-        fg     = "#e8f0f8",
-        dim    = "#8ba0b0",
-        accent = "#89cff0",
-        mid    = "#6ba3ff",
+        fg     = "#e8e0f0",
+        dim    = "#8a80a0",
+        accent = "#a78bfa",
+        mid    = "#b8a4f0",
       }
       require("lualine").setup({
         options = {
