@@ -11,6 +11,7 @@ DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 KITTY_CONF_PATH="$DOTFILES/kitty/.config/kitty/kitty.conf"
 NVIM_INIT="$DOTFILES/nvim/.config/nvim/init.lua"
 SB_RC="$DOTFILES/sketchybar/.config/sketchybar/sketchybarrc"
+LWP="$(command -v lwp || echo /Users/kayden/programs/projects/lwp/lwp)"
 
 # ── Theme definitions ──────────────────────────────────────────────
 # Each function sets:
@@ -121,6 +122,36 @@ theme_amethyst_lagoon() {
   LV_MID="#b8a4f0"
 }
 
+theme_night_lagoon() {
+  DISPLAY="Night Lagoon"
+  KITTY_THEME="night-lagoon.conf"
+  NVIM_CS="night-lagoon"
+  SB_ACCENT="0xff8c6ad8"
+  SB_HIGHLIGHT="0xffb098e8"
+  SB_BG="0xCC0a0812"
+  WALLPAPER=""
+  LIVE_WALLPAPER="$DOTFILES/live-wallpapers/night-lagoon.mp4"
+  LV_FG="#e4def0"
+  LV_DIM="#7a7490"
+  LV_ACCENT="#8c6ad8"
+  LV_MID="#b098e8"
+}
+
+theme_glow() {
+  DISPLAY="Glow"
+  KITTY_THEME="glow.conf"
+  NVIM_CS="glow"
+  SB_ACCENT="0xff8a8ff8"
+  SB_HIGHLIGHT="0xff8aa4f0"
+  SB_BG="0xCC0c0e18"
+  WALLPAPER=""
+  LIVE_WALLPAPER="$DOTFILES/live-wallpapers/glow.mp4"
+  LV_FG="#e6e8f4"
+  LV_DIM="#868aa4"
+  LV_ACCENT="#8a8ff8"
+  LV_MID="#8aa4f0"
+}
+
 # ── Helpers ────────────────────────────────────────────────────────
 
 # Write perl output to file without changing inode (preserves file watchers)
@@ -138,7 +169,7 @@ list_themes() {
 apply_theme() {
   local func="$1"
 
-  unset DISPLAY KITTY_THEME NVIM_CS SB_ACCENT SB_HIGHLIGHT SB_BG WALLPAPER LV_FG LV_DIM LV_ACCENT LV_MID
+  unset DISPLAY KITTY_THEME NVIM_CS SB_ACCENT SB_HIGHLIGHT SB_BG WALLPAPER LIVE_WALLPAPER LV_FG LV_DIM LV_ACCENT LV_MID
 
   "theme_${func}"
 
@@ -176,7 +207,9 @@ apply_theme() {
   fi
 
   # ── Wallpaper ────────────────────────────────────────────────
-  if [ -n "${WALLPAPER:-}" ] && [ -f "$WALLPAPER" ]; then
+  if [ -n "${LIVE_WALLPAPER:-}" ] && [ -f "$LIVE_WALLPAPER" ]; then
+    "$LWP" set "$LIVE_WALLPAPER"
+  elif [ -n "${WALLPAPER:-}" ] && [ -f "$WALLPAPER" ]; then
     osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$WALLPAPER\""
   fi
 
@@ -188,7 +221,7 @@ apply_theme() {
   echo "    kitty       → ${KITTY_THEME:-skip}"
   echo "    nvim        → ${NVIM_CS:-skip}"
   echo "    sketchybar  → accent=${SB_ACCENT:-skip} highlight=${SB_HIGHLIGHT:-skip} bg=${SB_BG:-skip}"
-  echo "    wallpaper   → ${WALLPAPER:-skip}"
+  echo "    wallpaper   → ${WALLPAPER:-${LIVE_WALLPAPER:-skip}}"
   echo ""
 }
 

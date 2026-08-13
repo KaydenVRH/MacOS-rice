@@ -1,0 +1,2 @@
+lwp stop
+killall lwp

@@ -9,4 +9,4 @@ sketchybar
 stow
 tmux (optional)
 aerospace
-
+choose
