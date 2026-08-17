@@ -10,3 +10,5 @@ stow
 tmux (optional)
 aerospace
 choose
+lwp (optional)
+
