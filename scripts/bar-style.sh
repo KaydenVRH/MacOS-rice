@@ -15,7 +15,7 @@ SB_RC="$DOTFILES/sketchybar/.config/sketchybar/sketchybarrc"
 #   DISPLAY        – human-readable name
 #   SB_ACCENT      – icon color
 #   SB_HIGHLIGHT   – label color
-#   SB_BG          – bracket background (with alpha)
+#   SB_BG          – bar background (with alpha)
 #   SB_BAR_HEIGHT  – bar height
 #   SB_BAR_CORNER  – bar corner radius
 #   SB_BAR_BLUR    – bar blur radius
@@ -28,10 +28,10 @@ bar_default() {
   DISPLAY="Default"
   SB_ACCENT="0xff83c092"
   SB_HIGHLIGHT="0xff7fbbb3"
-  SB_BG="0xCC2d353b"
+  SB_BG="0xAA2d353b"
   SB_BAR_HEIGHT="34"
   SB_BAR_CORNER="8"
-  SB_BAR_BLUR="24"
+  SB_BAR_BLUR="40"
   SB_GROUP_HEIGHT="28"
   SB_GROUP_CORNER="6"
   SB_FONT_ICON="17.0"
@@ -56,10 +56,10 @@ bar_retro() {
   DISPLAY="Retro"
   SB_ACCENT="0xffFFFF00"
   SB_HIGHLIGHT="0xff00FFFF"
-  SB_BG="0xCC0000AA"
+  SB_BG="0xAA0000AA"
   SB_BAR_HEIGHT="34"
   SB_BAR_CORNER="8"
-  SB_BAR_BLUR="24"
+  SB_BAR_BLUR="40"
   SB_GROUP_HEIGHT="28"
   SB_GROUP_CORNER="6"
   SB_FONT_ICON="17.0"
@@ -70,10 +70,10 @@ bar_mono() {
   DISPLAY="Mono"
   SB_ACCENT="0xffd0d0d0"
   SB_HIGHLIGHT="0xff808080"
-  SB_BG="0xCC1a1a1a"
+  SB_BG="0xAA1a1a1a"
   SB_BAR_HEIGHT="34"
   SB_BAR_CORNER="8"
-  SB_BAR_BLUR="24"
+  SB_BAR_BLUR="40"
   SB_GROUP_HEIGHT="28"
   SB_GROUP_CORNER="6"
   SB_FONT_ICON="17.0"
@@ -102,7 +102,7 @@ apply_style() {
   # Colors
   [ -n "${SB_ACCENT:-}" ]    && _write "$SB_RC" 's/^ACCENT=.*/ACCENT='"${SB_ACCENT}"'/'
   [ -n "${SB_HIGHLIGHT:-}" ] && _write "$SB_RC" 's/^HIGHLIGHT=.*/HIGHLIGHT='"${SB_HIGHLIGHT}"'/'
-  [ -n "${SB_BG:-}" ]        && _write "$SB_RC" 's/background\.color=0x[0-9a-fA-F]*/background.color='"${SB_BG}"'/g'
+  [ -n "${SB_BG:-}" ]        && _write "$SB_RC" 's/color=0x[0-9a-fA-F]* display=main/color='"${SB_BG}"' display=main/'
 
   # Bar geometry
   [ -n "${SB_BAR_HEIGHT:-}" ] && _write "$SB_RC" 's/position=top height=[0-9]*/position=top height='"${SB_BAR_HEIGHT}"'/'

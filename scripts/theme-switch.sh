@@ -20,7 +20,7 @@ LWP="$(command -v lwp || echo /Users/kayden/programs/projects/lwp/lwp)"
 #   NVIM_CS        – neovim colorscheme name
 #   SB_ACCENT      – sketchybar icon color
 #   SB_HIGHLIGHT   – sketchybar label color
-#   SB_BG          – sketchybar bracket background (with alpha)
+#   SB_BG          – sketchybar bar background (with alpha)
 #   WALLPAPER      – path to wallpaper image (leave empty to skip)
 #   LV_FG LV_DIM LV_ACCENT LV_MID – lualine colors
 
@@ -30,7 +30,7 @@ theme_mono() {
   NVIM_CS="mono"
   SB_ACCENT="0xffd0d0d0"
   SB_HIGHLIGHT="0xff808080"
-  SB_BG="0xCC1a1a1a"
+  SB_BG="0xAA1a1a1a"
   WALLPAPER="$DOTFILES/wallpapers/monochrome.jpg"
   LV_FG="#e0e0e0"
   LV_DIM="#606060"
@@ -44,7 +44,7 @@ theme_everforest() {
   NVIM_CS="everforest"
   SB_ACCENT="0xff83c092"
   SB_HIGHLIGHT="0xff7fbbb3"
-  SB_BG="0xCC2d353b"
+  SB_BG="0xAA2d353b"
   WALLPAPER="$DOTFILES/wallpapers/everforest.png"
   LV_FG="#d3c6aa"
   LV_DIM="#859289"
@@ -58,7 +58,7 @@ theme_amber() {
   NVIM_CS="amber"
   SB_ACCENT="0xfffbbf24"
   SB_HIGHLIGHT="0xffa855f7"
-  SB_BG="0xCC1e1a2e"
+  SB_BG="0xAA1e1a2e"
   WALLPAPER=""
   LV_FG="#e2e8f0"
   LV_DIM="#8880a0"
@@ -72,7 +72,7 @@ theme_synthwave() {
   NVIM_CS="mono"
   SB_ACCENT="0xffff2a85"
   SB_HIGHLIGHT="0xff00d4ff"
-  SB_BG="0xCC100018"
+  SB_BG="0xAA100018"
   WALLPAPER="$DOTFILES/wallpapers/synthwave.jpg"
   LV_FG="#e0d0f0"
   LV_DIM="#9a80aa"
@@ -86,7 +86,7 @@ theme_cherry_blossom() {
   NVIM_CS="mono"
   SB_ACCENT="0xfff8a5c2"
   SB_HIGHLIGHT="0xffc3aedb"
-  SB_BG="0xCC1c1116"
+  SB_BG="0xAA1c1116"
   WALLPAPER="$DOTFILES/wallpapers/cherryblossom.jpg"
   LV_FG="#f5e6e8"
   LV_DIM="#a88a92"
@@ -100,7 +100,7 @@ theme_blue_lagoon() {
   NVIM_CS="blue-lagoon"
   SB_ACCENT="0xff89cff0"
   SB_HIGHLIGHT="0xff6ba3ff"
-  SB_BG="0xCC0e1419"
+  SB_BG="0xAA0e1419"
   WALLPAPER="$DOTFILES/wallpapers/blue-lagoon.jpg"
   LV_FG="#e8f0f8"
   LV_DIM="#8ba0b0"
@@ -114,7 +114,7 @@ theme_amethyst_lagoon() {
   NVIM_CS="amethyst-lagoon"
   SB_ACCENT="0xffa78bfa"
   SB_HIGHLIGHT="0xffb8a4f0"
-  SB_BG="0xCC120e1a"
+  SB_BG="0xAA120e1a"
   WALLPAPER=""
   LV_FG="#e8e0f0"
   LV_DIM="#8a80a0"
@@ -128,7 +128,7 @@ theme_night_lagoon() {
   NVIM_CS="night-lagoon"
   SB_ACCENT="0xff8c6ad8"
   SB_HIGHLIGHT="0xffb098e8"
-  SB_BG="0xCC0a0812"
+  SB_BG="0xAA0a0812"
   WALLPAPER=""
   LIVE_WALLPAPER="$DOTFILES/live-wallpapers/night-lagoon.mp4"
   LV_FG="#e4def0"
@@ -143,13 +143,43 @@ theme_glow() {
   NVIM_CS="glow"
   SB_ACCENT="0xff8a8ff8"
   SB_HIGHLIGHT="0xff8aa4f0"
-  SB_BG="0xCC0c0e18"
+  SB_BG="0xAA0c0e18"
   WALLPAPER=""
   LIVE_WALLPAPER="$DOTFILES/live-wallpapers/glow.mp4"
   LV_FG="#e6e8f4"
   LV_DIM="#868aa4"
   LV_ACCENT="#8a8ff8"
   LV_MID="#8aa4f0"
+}
+
+theme_sunset() {
+  DISPLAY="Sunset"
+  KITTY_THEME="sunset.conf"
+  NVIM_CS="sunset"
+  SB_ACCENT="0xff6ba3ff"
+  SB_HIGHLIGHT="0xfff5c842"
+  SB_BG="0xAA0e1419"
+  WALLPAPER=""
+  LIVE_WALLPAPER="$DOTFILES/live-wallpapers/sunset.mp4"
+  LV_FG="#e8f0f8"
+  LV_DIM="#8ba0b0"
+  LV_ACCENT="#6ba3ff"
+  LV_MID="#f5c842"
+}
+
+theme_rose_pine() {
+  DISPLAY="Rose Pine"
+  KITTY_THEME="rose-pine.conf"
+  NVIM_CS="rose-pine"
+  SB_ACCENT="0xffebbcba"
+  SB_HIGHLIGHT="0xffc4a7e7"
+  SB_BG="0xAA191724"
+  WALLPAPER=""
+  LIVE_WALLPAPER=""
+  LV_FG="#e0def4"
+  LV_DIM="#6e6a86"
+  LV_ACCENT="#ebbcba"
+  LV_MID="#c4a7e7"
 }
 
 # ── Helpers ────────────────────────────────────────────────────────
@@ -203,7 +233,7 @@ apply_theme() {
     _replace_inplace "$SB_RC" 's/^HIGHLIGHT=.*/HIGHLIGHT='"${SB_HIGHLIGHT}"'/'
   fi
   if [ -n "${SB_BG:-}" ]; then
-    _replace_inplace "$SB_RC" 's/background\.color=0x[0-9a-fA-F]*/background.color='"${SB_BG}"'/g'
+    _replace_inplace "$SB_RC" 's/color=0x[0-9a-fA-F]* display=main/color='"${SB_BG}"' display=main/'
   fi
 
   # ── Wallpaper ────────────────────────────────────────────────
