@@ -1,11 +1,11 @@
 # Everforest — nature-inspired, muted greens, warm earth tones
-ACCENT=0xffebbcba
-HIGHLIGHT=0xffc4a7e7
+ACCENT=0xffd0d0d0
+HIGHLIGHT=0xff808080
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Bar Appearance #####
-sketchybar --bar position=top height=34 margin=0 y_offset=0 corner_radius=0 blur_radius=40 color=0xAA191724 display=main
+sketchybar --bar position=top height=34 margin=0 y_offset=0 corner_radius=0 blur_radius=40 color=0xAA1a1a1a display=main
 
 ##### Changing Defaults #####
 default=(
