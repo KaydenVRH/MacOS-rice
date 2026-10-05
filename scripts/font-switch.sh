@@ -50,10 +50,9 @@ apply_font() {
 
   # Kitty
   [ -n "${MONO:-}" ] && _write "$KITTY_CONF_PATH" 's/^font_family .*/font_family '"${MONO}"'/'
-
-  # Sketchybar (replace name before the :Bold:size, keep size)
-  [ -n "${SB:-}" ] && _write "$SB_RC" 's/icon\.font="[^:]*/icon.font="'"${SB}"'/'
-  [ -n "${SB:-}" ] && _write "$SB_RC" 's/label\.font="[^:]*/label.font="'"${SB}"'/'
+  # Sketchybar (only the default :Bold: font, so the Apple logo's system font is left alone)
+  [ -n "${SB:-}" ] && _write "$SB_RC" 's/icon\.font="[^:]*:Bold:/icon.font="'"${SB}"':Bold:/'
+  [ -n "${SB:-}" ] && _write "$SB_RC" 's/label\.font="[^:]*:Bold:/label.font="'"${SB}"':Bold:/'
 
   # WezTerm (optional)
   if [ -n "${MONO:-}" ] && [ -f "$WEZTERM_CONF" ]; then

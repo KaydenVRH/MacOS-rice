@@ -1,0 +1,9 @@
+[submodule "misc/lost-and-found/tmux/backups/plugins/tmux"]
+	path = misc/lost-and-found/tmux/backups/plugins/tmux
+	url = https://github.com/catppuccin/tmux.git
+[submodule "misc/lost-and-found/tmux/backups/plugins/tmux-sensible"]
+	path = misc/lost-and-found/tmux/backups/plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible.git
+[submodule "misc/lost-and-found/tmux/backups/plugins/tpm"]
+	path = misc/lost-and-found/tmux/backups/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
