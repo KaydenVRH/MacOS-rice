@@ -132,6 +132,9 @@ on-mode-changed = []
      # The screen border (the bar's glass carried around the screen edge).
      alt-b = 'exec-and-forget $HOME/.local/bin/kshell trigger border_toggle'
 
+     # The media centre — the island that grows out of the bar's now-playing.
+     alt-n = 'exec-and-forget $HOME/.local/bin/kshell trigger media_center_toggle'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
 
