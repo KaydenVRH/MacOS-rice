@@ -8,7 +8,10 @@ config-version = 2
 
 
 
-after-startup-command = ['exec-and-forget ~/.local/bin/kshell']
+# kshell is started at login by ~/Library/LaunchAgents/dev.kayden.kshell.plist
+# (RunAtLoad, Aqua session). Don't start it from here too: an AeroSpace launch can
+# win the IPC socket before the GUI session is up and leave a half-built bar.
+# after-startup-command = ['exec-and-forget ~/.local/bin/kshell']
 # after-startup-command = ['exec-and-forget sketchybar']   # old bar (kept; sketchybarrc untouched)
 #after-startup-command = ['sketchybar']
 #exec-and-forget = ['sketchybar']
