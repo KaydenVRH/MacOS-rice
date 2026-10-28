@@ -30,13 +30,13 @@ icon_font_size  = 19
 # "$foreground", "$dim", "$mid", "$background" — resolved from [theme] below,
 # so the theme switcher only has to rewrite that section.
 [theme]
-name = "Catppuccin Latte"
-accent = "#1e66f5"
-highlight = "#8839ef"
-foreground = "#4c4f69"
-dim = "#9ca0b0"
-mid = "#179299"
-background = "#eff1f5AA"
+name = "Matte Black"
+accent = "#e68e0d"
+highlight = "#ffc107"
+foreground = "#bebebe"
+dim = "#555555"
+mid = "#ffc107"
+background = "#121212AA"
 
 # Script launcher (trigger with `kshell trigger script_launcher_toggle`)
 [script_launcher]
@@ -523,6 +523,54 @@ foreground     = "#000000"
 dim            = "#808080"
 mid            = "#3a3a3a"
 background     = "#ffffffAA"
+
+[[theme_launcher.themes]]
+name           = "Vice City"
+kitty          = "vice-city.conf"
+nvim           = "vice-city"
+wallpaper      = "~/dotfiles/wallpapers/vice-city.jpg"
+accent         = "#ff6ec7"
+highlight      = "#00ffff"
+foreground     = "#f793d9"
+dim            = "#8a6a9a"
+mid            = "#00a8ff"
+background     = "#0a0a14AA"
+
+[[theme_launcher.themes]]
+name           = "Cobalt 2"
+kitty          = "cobalt2.conf"
+nvim           = "cobalt2"
+wallpaper      = "~/dotfiles/wallpapers/cobalt2.jpg"
+accent         = "#ffc600"
+highlight      = "#80fcff"
+foreground     = "#ffffff"
+dim            = "#7fa4bd"
+mid            = "#0088ff"
+background     = "#122738AA"
+
+[[theme_launcher.themes]]
+name           = "Ayu Light"
+kitty          = "ayu-light.conf"
+nvim           = "ayu-light"
+wallpaper      = "~/dotfiles/wallpapers/ayu-light.jpg"
+accent         = "#fa8d3e"
+highlight      = "#3199e1"
+foreground     = "#5c6166"
+dim            = "#9aa0a6"
+mid            = "#46ba94"
+background     = "#f8f9faAA"
+
+[[theme_launcher.themes]]
+name           = "Solarized Light"
+kitty          = "solarized-light.conf"
+nvim           = "solarized-light"
+wallpaper      = "~/dotfiles/wallpapers/solarized-light.jpg"
+accent         = "#268bd2"
+highlight      = "#cb4b16"
+foreground     = "#586e75"
+dim            = "#93a1a1"
+mid            = "#2aa198"
+background     = "#fdf6e3AA"
 
 
 
