@@ -30,13 +30,13 @@ icon_font_size  = 19
 # "$foreground", "$dim", "$mid", "$background" — resolved from [theme] below,
 # so the theme switcher only has to rewrite that section.
 [theme]
-name = "Matte Black"
-accent = "#e68e0d"
-highlight = "#ffc107"
-foreground = "#bebebe"
-dim = "#555555"
-mid = "#ffc107"
-background = "#121212AA"
+name = "Synthwave"
+accent = "#ff2a85"
+highlight = "#00d4ff"
+foreground = "#e0d0f0"
+dim = "#9a80aa"
+mid = "#00d4ff"
+background = "#100018AA"
 
 # Script launcher (trigger with `kshell trigger script_launcher_toggle`)
 [script_launcher]
@@ -618,3 +618,19 @@ opacity = 0.8
 mirror  = 0.35          # reflection under the baseline; 0 turns it off
 fade    = 0.5           # seconds to fade in and out
 display = "all"         # all | main
+
+# Notifications. kshell keeps its own notification centre: a sidebar on the right
+# edge (j/k to walk, enter to open, x dismiss, C clear) and a card that drops out
+# from under the bar when something arrives. It is fed by two sources — what
+# macOS delivers for other apps (mirrored read-only from Notification Center's
+# database) and anything posted through `kshell notify "Title" "Body"`.
+#
+# Showing a notification here does not stop macOS drawing its own banner: that is
+# a per-app setting in System Settings → Notifications. Set an app to "None" (or
+# use a Focus) when you want kshell to be the only place it shows up.
+[notifications]
+enabled       = true
+mirror_macos  = true    # mirror other apps' notifications from the system database
+toasts        = true    # drop a card under the bar when something arrives
+toast_seconds = 6       # hover pauses the countdown
+history       = 200     # kept across restarts, in ~/Library/Caches/kshell
