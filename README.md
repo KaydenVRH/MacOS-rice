@@ -11,6 +11,7 @@ by the configs.
 | --- | --- |
 | `aerospace/` | `~/.aerospace.toml` |
 | `ghostty/` | Ghostty's Application Support config |
+| `herdr/` | `~/.config/herdr/config.toml` |
 | `kitty/` | `~/.config/kitty/` |
 | `kshell/` | `~/.config/kshell/config.toml` |
 | `nvim/` | `~/.config/nvim/` |
@@ -21,7 +22,7 @@ With GNU Stow installed, packages can be linked from this directory with:
 
 ```sh
 cd ~/dotfiles
-stow -t "$HOME" aerospace ghostty kitty kshell nvim sketchybar tmux
+stow -t "$HOME" aerospace ghostty herdr kitty kshell nvim sketchybar tmux
 ```
 
 This repo assumes shared assets remain at `~/dotfiles`, as referenced by some

@@ -1,0 +1,140 @@
+# herdr configuration
+# Synthwave rice mirroring ~/dotfiles/kitty
+#
+# The outer terminal still owns font, opacity (0.7), blur (40), and cursor
+# trail. Herdr inherits all of that automatically; this file makes its UI
+# palette and multiplexing keys feel like the kitty setup.
+
+onboarding = false
+
+# ============================================================
+# THEME — synthwave
+# ============================================================
+# "terminal" keeps the base aligned with the host palette; every UI token
+# below is pinned to the synthwave colors from kitty/synthwave.conf.
+[theme]
+name = "terminal"
+auto_switch = false
+
+[theme.custom]
+# "reset" lets kitty's 70% opacity + blur show through the UI surfaces.
+panel_bg = "reset"
+sidebar_bg = "reset"
+
+accent = "#ff2a85"           # kitty active border / tab / cursor pink
+active_row_bg = "#3a0050"    # kitty selection background
+selection_bg = "#3a0050"
+
+surface0 = "#1a0028"         # inactive tab background
+surface1 = "#2a0038"         # hover / lighter surface
+surface_dim = "#100018"      # active-tab foreground on the pink accent
+overlay0 = "#8a6f9e"         # muted text + inactive pane borders
+overlay1 = "#b89ccc"         # brighter muted text
+
+text = "#e0d0f0"             # kitty foreground
+subtext0 = "#c0a8d8"
+mauve = "#d400ff"            # kitty magenta
+green = "#00ffcc"            # idle / done
+yellow = "#ffb347"           # working
+red = "#ff2a85"              # blocked
+blue = "#00d4ff"             # finished notifications
+teal = "#66ffdd"
+peach = "#ffc773"
+
+# ============================================================
+# KEYBINDINGS — kitty-compatible (prefix: Ctrl+B)
+# ============================================================
+[keys]
+prefix = "ctrl+b"
+
+# kitty: ctrl+b " (hsplit) / % (vsplit) / w (new neighbour pane)
+split_horizontal = ["prefix+double_quote", "prefix+minus"]
+split_vertical = ["prefix+percent", "prefix+v", "prefix+w"]
+
+# kitty: ctrl+b arrows move between windows
+focus_pane_left = ["prefix+left", "prefix+h"]
+focus_pane_down = ["prefix+down", "prefix+j"]
+focus_pane_up = ["prefix+up", "prefix+k"]
+focus_pane_right = ["prefix+right", "prefix+l"]
+
+# kitty: ctrl+b c / n / p / & / 1-9
+new_tab = "prefix+c"
+next_tab = "prefix+n"
+previous_tab = "prefix+p"
+close_tab = ["prefix+ampersand", "prefix+shift+x"]
+switch_tab = "prefix+1..9"
+
+# kitty: ctrl+b z fullscreen, ctrl+b space next layout
+zoom = "prefix+z"
+cycle_pane_next = ["prefix+tab", "prefix+space"]
+cycle_pane_previous = "prefix+shift+tab"
+
+# kitty: ctrl+b ctrl+arrows resize directly
+resize_pane_left = "prefix+ctrl+left"
+resize_pane_right = "prefix+ctrl+right"
+resize_pane_up = "prefix+ctrl+up"
+resize_pane_down = "prefix+ctrl+down"
+resize_mode = "prefix+shift+r"
+
+# kitty: ctrl+b [ scrollback, ctrl+b r reload config
+copy_mode = "prefix+["
+reload_config = "prefix+r"
+
+# Herdr's own navigation stays available, moved out of kitty's way.
+workspace_picker = "prefix+shift+w"
+rename_workspace = "prefix+alt+w"
+settings = "prefix+shift+s"
+new_workspace = "prefix+shift+n"
+close_workspace = "prefix+shift+d"
+goto = "prefix+g"
+detach = "prefix+q"
+toggle_sidebar = "prefix+b"
+
+# kitty custom: ctrl+b s runs a script from ~/dotfiles/scripts via fzf.
+[[keys.command]]
+key = "prefix+s"
+type = "popup"
+command = 'script=$(find ~/dotfiles/scripts -type f | sort | fzf --prompt="script> " --height=20) && [ -n "$script" ] && bash "$script"; echo; echo "Press enter to close"; read'
+description = "run a script from ~/dotfiles/scripts"
+width = "80%"
+height = "80%"
+
+# ============================================================
+# UI — match kitty's pane borders and powerline-ish tab bar
+# ============================================================
+[ui]
+# Keep herdr's sidebar out of the way, like kitty's tab-only workflow.
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
+
+# kitty: border_width 3 with a pink active border, no scrollbars
+pane_borders = "always"
+pane_outer_borders = true
+pane_gaps = true
+pane_scrollbars = false
+
+# kitty: tab bar always visible at the top, named after the working dir
+hide_tab_bar_when_single_tab = false
+tab_bar_position = "top"
+prompt_new_tab_name = false
+window_title = "{workspace}"
+
+# kitty's tab_title_template shows the active window's cwd basename.
+# Herdr's tab labels are numeric, so mirror the cwd on the right side.
+tab_bar_right = [
+  { type = "command", command = 'basename "$HERDR_ACTIVE_PANE_CWD"', interval_seconds = 1, timeout_seconds = 2 },
+]
+tab_bar_right_separator = " "
+
+# kitty closes tabs without a confirmation prompt
+confirm_close = false
+
+# ============================================================
+# Notifications — in-app only, no OS popups
+# ============================================================
+[ui.toast]
+delivery = "herdr"
+delay_seconds = 1
+
+[ui.toast.herdr]
+position = "bottom-right"
