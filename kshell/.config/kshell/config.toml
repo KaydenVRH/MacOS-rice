@@ -634,3 +634,11 @@ mirror_macos  = true    # mirror other apps' notifications from the system datab
 toasts        = true    # drop a card under the bar when something arrives
 toast_seconds = 6       # hover pauses the countdown
 history       = 200     # kept across restarts, in ~/Library/Caches/kshell
+
+# The Bluetooth menu (alt-shift-b in aerospace): a right-edge sidebar of paired
+# devices. Enter connects or disconnects, p turns the radio on or off, r
+# refreshes. Connected devices sort first; the list polls only while it is open.
+# Scriptable too: `kshell trigger bluetooth_toggle "AirPods"` and
+# `kshell trigger bluetooth_power on|off`.
+[bluetooth]
+enabled = true

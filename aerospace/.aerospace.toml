@@ -135,6 +135,9 @@ on-mode-changed = []
      # The screen border (the bar's glass carried around the screen edge).
      alt-b = 'exec-and-forget $HOME/.local/bin/kshell trigger border_toggle'
 
+     # The Bluetooth menu — paired devices, connect/disconnect, radio power.
+     alt-shift-b = 'exec-and-forget $HOME/.local/bin/kshell trigger bluetooth_menu_toggle'
+
      # The notification centre — the sidebar of things that have arrived.
      alt-n = 'exec-and-forget $HOME/.local/bin/kshell trigger notification_center_toggle'
 
