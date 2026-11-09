@@ -572,6 +572,66 @@ dim            = "#93a1a1"
 mid            = "#2aa198"
 background     = "#fdf6e3AA"
 
+[[theme_launcher.themes]]
+name           = "Alabaster"
+kitty          = "alabaster.conf"
+nvim           = "alabaster"
+wallpaper      = "~/dotfiles/wallpapers/alabaster.jpg"
+accent         = "#325CC0"
+highlight      = "#AA3731"
+foreground     = "#434343"
+dim            = "#777777"
+mid            = "#0083B2"
+background     = "#F7F7F7AA"
+
+[[theme_launcher.themes]]
+name           = "Solitude"
+kitty          = "solitude.conf"
+nvim           = "solitude"
+wallpaper      = "~/dotfiles/wallpapers/solitude.jpg"
+accent         = "#798186"
+highlight      = "#a5aeb4"
+foreground     = "#cacccc"
+dim            = "#4b4e55"
+mid            = "#9fa5a9"
+background     = "#101315AA"
+
+[[theme_launcher.themes]]
+name           = "Void"
+kitty          = "void.conf"
+nvim           = "void"
+wallpaper      = "~/dotfiles/wallpapers/void.jpg"
+accent         = "#BB9AF7"
+highlight      = "#A6B8FF"
+foreground     = "#FFFFFF"
+dim            = "#6B578F"
+mid            = "#B49AE6"
+background     = "#05010CAA"
+
+[[theme_launcher.themes]]
+name           = "Azure Glow"
+kitty          = "azure-glow.conf"
+nvim           = "azure-glow"
+wallpaper      = "~/dotfiles/wallpapers/azure-glow.jpg"
+accent         = "#00aaff"
+highlight      = "#66e0ff"
+foreground     = "#a8dfff"
+dim            = "#4a6b80"
+mid            = "#33ccff"
+background     = "#0a0f1AAA"
+
+[[theme_launcher.themes]]
+name           = "Fiery Ocean"
+kitty          = "fiery-ocean.conf"
+nvim           = "fiery-ocean"
+wallpaper      = "~/dotfiles/wallpapers/fiery-ocean.jpg"
+accent         = "#fca311"
+highlight      = "#90e0ef"
+foreground     = "#fdf0d5"
+dim            = "#59696a"
+mid            = "#2a9d8f"
+background     = "#002130AA"
+
 
 
 
