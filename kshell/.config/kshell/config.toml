@@ -30,13 +30,13 @@ icon_font_size  = 19
 # "$foreground", "$dim", "$mid", "$background" — resolved from [theme] below,
 # so the theme switcher only has to rewrite that section.
 [theme]
-name = "Synthwave"
-accent = "#ff2a85"
-highlight = "#00d4ff"
-foreground = "#e0d0f0"
-dim = "#9a80aa"
-mid = "#00d4ff"
-background = "#100018AA"
+name = "Fiery Ocean"
+accent = "#fca311"
+highlight = "#90e0ef"
+foreground = "#fdf0d5"
+dim = "#59696a"
+mid = "#2a9d8f"
+background = "#002130AA"
 
 # Script launcher (trigger with `kshell trigger script_launcher_toggle`)
 [script_launcher]
@@ -66,7 +66,7 @@ type            = "workspaces"
 workspaces      = "1,2,3,4,5,6,7,8,9"
 padding         = 3
 unfocused_color = "$accent"
-focused_color   = "$highlight"
+focused_color   = "$mid"          # the green accent, not the label white
 hide_empty      = true            # only show workspaces that are focused or hold windows
 
 [[bar.left]]
@@ -85,6 +85,7 @@ command   = "~/programs/projects/kshell/scripts/widgets/now_playing.sh"
 action    = "kshell trigger media_center_toggle"   # click to open the media centre
 interval  = 3
 icon_hex  = "f001"               # music note
+icon_color = "$mid"              # the green accent
 padding   = 10
 
 # ─────────────────────────────── right ──────────────────────────────
@@ -146,6 +147,23 @@ shell_config = "~/.config/kshell/config.toml"
 # Kitty glass used by themes that don't set their own.
 opacity = 0.7
 blur    = 40
+
+[[theme_launcher.themes]]
+# macOS dark mode, sampled from AppKit: windowBackgroundColor #1E1E1E,
+# labelColor at 85% (#DDDDDD), and the user's system accent (#8C8C8C).
+name       = "macOS Dark"
+kitty      = "macos-dark.conf"
+nvim       = "macos-dark"
+wallpaper  = "~/dotfiles/wallpapers/monochrome.jpg"
+accent     = "#8C8C8C"
+highlight  = "#FFFFFF"
+foreground = "#DDDDDD"
+dim        = "#9A9A9A"
+# `mid` is the one palette slot the UI does not use by default, so it carries the
+# single green accent (systemGreen #30D158): the focused workspace and the music
+# note point at "$mid" below. Everything else stays grey.
+mid        = "#30D158"
+background = "#1E1E1EAA"
 
 [[theme_launcher.themes]]
 name       = "Synthwave"

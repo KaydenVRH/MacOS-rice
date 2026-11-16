@@ -182,6 +182,21 @@ theme_rose_pine() {
   LV_MID="#c4a7e7"
 }
 
+theme_macos_dark() {
+  DISPLAY="macOS Dark"
+  KITTY_THEME="macos-dark.conf"
+  NVIM_CS="macos-dark"
+  SB_ACCENT="0xff8c8c8c"
+  SB_HIGHLIGHT="0xffdddddd"
+  SB_BG="0xAA1e1e1e"
+  WALLPAPER="$DOTFILES/wallpapers/monochrome.jpg"
+  LIVE_WALLPAPER=""
+  LV_FG="#dddddd"
+  LV_DIM="#9a9a9a"
+  LV_ACCENT="#8c8c8c"
+  LV_MID="#565656"
+}
+
 # ── Helpers ────────────────────────────────────────────────────────
 
 # Write perl output to file without changing inode (preserves file watchers)
@@ -243,6 +258,14 @@ apply_theme() {
     osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$WALLPAPER\""
   fi
 
+  # ── tmux ───────────────────────────────────────────────────────
+  # Same writer kshell uses, so either switcher keeps tmux in step.
+  if [ -n "${LV_ACCENT:-}" ]; then
+    "$DOTFILES/scripts/tmux-theme.sh" \
+      "${DISPLAY:-$func}" "${LV_ACCENT}" "${SB_HIGHLIGHT}" \
+      "${LV_FG}" "${LV_DIM}" "${LV_MID}" "${SB_BG}" >/dev/null || true
+  fi
+
   # ── Reload ─────────────────────────────────────────────────────
   sketchybar --reload 2>/dev/null || true
 
@@ -251,6 +274,7 @@ apply_theme() {
   echo "    kitty       → ${KITTY_THEME:-skip}"
   echo "    nvim        → ${NVIM_CS:-skip}"
   echo "    sketchybar  → accent=${SB_ACCENT:-skip} highlight=${SB_HIGHLIGHT:-skip} bg=${SB_BG:-skip}"
+  echo "    tmux        → ${LV_ACCENT:-skip}"
   echo "    wallpaper   → ${WALLPAPER:-${LIVE_WALLPAPER:-skip}}"
   echo ""
 }

@@ -37,6 +37,21 @@ application source remains a separate project at
 `~/programs/projects/kshell`; this repo only owns its user configuration.
 Build/install the app from that project before using the kshell integrations.
 
+## tmux
+
+`tmux/.config/tmux/tmux.conf` mirrors the kitty multiplexing bindings in
+`kitty/.config/kitty/kitty.conf` — same `Ctrl+B` prefix, same keys for splits,
+pane movement, tabs, layouts, zoom, scrollback, reload and the fzf script
+picker. Two kitty-specific bindings have the closest tmux equivalent: `w`
+(kitty's `launch --location=neighbor`) opens a pane beside this one, and `s`
+runs the same script picker inside a tmux popup.
+
+Colours are not stored in `tmux.conf`. `scripts/tmux-theme.sh` writes
+`theme.conf` from the active kshell theme's palette and reloads a running
+server, and both switchers call it — `kshell theme <name>` from the app and
+`scripts/theme-switch.sh <name>` from a shell. `theme.conf` is generated, so it
+is gitignored; delete it and tmux falls back to its own colours.
+
 ## Preserved items
 
 `misc/lost-and-found/` contains old backups, cache data, a loose image, and
