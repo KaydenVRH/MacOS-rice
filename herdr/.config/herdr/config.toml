@@ -38,11 +38,11 @@ text = "#CFE9F7"             # kitty foreground
 subtext0 = "#A8CBD8"
 mauve = "#B07CFF"            # agent names — holo violet
 green = "#3DDC97"            # idle / done
-yellow = "#FFC24B"           # working — arc gold
+yellow = "#C8DCE8"           # working — steel white
 red = "#FF4D3D"              # blocked — iron red
 blue = "#37A8FF"             # finished notifications
 teal = "#37D8FF"             # reactor cyan
-peach = "#FFC24B"
+peach = "#E6F6FF"
 
 # The same design in light mode, so a future flip is not a rewrite.
 [theme.custom.light]
