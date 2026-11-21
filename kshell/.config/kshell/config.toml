@@ -30,13 +30,13 @@ icon_font_size  = 19
 # "$foreground", "$dim", "$mid", "$background" — resolved from [theme] below,
 # so the theme switcher only has to rewrite that section.
 [theme]
-name = "Fiery Ocean"
-accent = "#fca311"
-highlight = "#90e0ef"
-foreground = "#fdf0d5"
-dim = "#59696a"
-mid = "#2a9d8f"
-background = "#002130AA"
+name = "Stark"
+accent = "#37D8FF"
+highlight = "#FFC24B"
+foreground = "#CFE9F7"
+dim = "#4A6B7C"
+mid = "#FF4D3D"
+background = "#05090FAA"
 
 # Script launcher (trigger with `kshell trigger script_launcher_toggle`)
 [script_launcher]
@@ -657,6 +657,21 @@ background     = "#002130AA"
 # The line drawn inside the screen edges — the bar's glass carried around the
 # screen, in the same style as the media centre's surface. It stops at the bar
 # (it never crosses it) and lives in your window manager's outer gap.
+
+[[theme_launcher.themes]]
+# Iron Man holographic: arc-reactor cyan on near-black blue, gold readouts, red
+# for failures. The wallpaper is a Metal shader — no video file, drawn live.
+name           = "Stark"
+kitty          = "stark.conf"
+nvim           = "stark"
+wallpaper      = "~/dotfiles/wallpapers/monochrome.jpg"
+shader         = "stark"
+accent         = "#37D8FF"
+highlight      = "#FFC24B"
+foreground     = "#CFE9F7"
+dim            = "#4A6B7C"
+mid            = "#FF4D3D"
+background     = "#05090FAA"
 [border]
 # Toggle at runtime with `kshell trigger border_toggle`.
 enabled   = true

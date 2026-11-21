@@ -9,7 +9,7 @@
 onboarding = false
 
 # ============================================================
-# THEME — macOS Dark, monochrome with one green accent
+# THEME — Stark, Iron Man holographic (cyan / gold / red on near-black blue)
 # ============================================================
 # "terminal" keeps the base aligned with the host palette (kitty's #1E1E1E),
 # and every UI token below is a macOS dark-mode value: windowBackground #1E1E1E,
@@ -24,25 +24,25 @@ auto_switch = false
 panel_bg = "reset"
 sidebar_bg = "reset"
 
-accent = "#8C8C8C"           # the macOS system accent (graphite)
-active_row_bg = "#3A3A3A"    # kitty selection background
-selection_bg = "#3A3A3A"
+accent = "#37D8FF"           # reactor cyan
+active_row_bg = "#10303C"    # selection, cyan-tinted
+selection_bg = "#10303C"
 
-surface0 = "#282828"         # inactive tab background (underPageBackground)
-surface1 = "#333333"         # hover / lighter surface
-surface_dim = "#1A1A1A"      # active-tab foreground on the accent
-overlay0 = "#6E6E6E"         # muted text + inactive pane borders
-overlay1 = "#9A9A9A"         # brighter muted text
+surface0 = "#0B141C"         # inactive tab background
+surface1 = "#14222C"         # hover / lighter surface
+surface_dim = "#05090F"      # active-tab foreground on the accent
+overlay0 = "#4A6B7C"         # muted text + inactive pane borders
+overlay1 = "#6E93A6"         # brighter muted text
 
-text = "#DDDDDD"             # kitty foreground (labelColor 85%)
-subtext0 = "#B0B0B0"
-mauve = "#C8C8C8"            # agent names — grey, no hue
-green = "#30D158"            # idle / done — the accent
-yellow = "#B4B4B4"           # working — bright grey
-red = "#FFFFFF"              # blocked — brightest, urgency by lightness
-blue = "#9A9A9A"             # finished notifications
-teal = "#7F9A88"             # desaturated green (kitty's cyan slot)
-peach = "#C8C8C8"
+text = "#CFE9F7"             # kitty foreground
+subtext0 = "#A8CBD8"
+mauve = "#B07CFF"            # agent names — holo violet
+green = "#3DDC97"            # idle / done
+yellow = "#FFC24B"           # working — arc gold
+red = "#FF4D3D"              # blocked — iron red
+blue = "#37A8FF"             # finished notifications
+teal = "#37D8FF"             # reactor cyan
+peach = "#FFC24B"
 
 # The same design in light mode, so a future flip is not a rewrite.
 [theme.custom.light]

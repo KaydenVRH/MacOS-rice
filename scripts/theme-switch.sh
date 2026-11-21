@@ -197,6 +197,21 @@ theme_macos_dark() {
   LV_MID="#565656"
 }
 
+theme_stark() {
+  DISPLAY="Stark"
+  KITTY_THEME="stark.conf"
+  NVIM_CS="stark"
+  SB_ACCENT="0xff37d8ff"
+  SB_HIGHLIGHT="0xffffc24b"
+  SB_BG="0xAA05090f"
+  WALLPAPER=""
+  SHADER="stark"
+  LV_FG="#cfe9f7"
+  LV_DIM="#4a6b7c"
+  LV_ACCENT="#37d8ff"
+  LV_MID="#ffc24b"
+}
+
 # ── Helpers ────────────────────────────────────────────────────────
 
 # Write perl output to file without changing inode (preserves file watchers)
@@ -214,7 +229,7 @@ list_themes() {
 apply_theme() {
   local func="$1"
 
-  unset DISPLAY KITTY_THEME NVIM_CS SB_ACCENT SB_HIGHLIGHT SB_BG WALLPAPER LIVE_WALLPAPER LV_FG LV_DIM LV_ACCENT LV_MID
+  unset DISPLAY KITTY_THEME NVIM_CS SB_ACCENT SB_HIGHLIGHT SB_BG WALLPAPER LIVE_WALLPAPER SHADER LV_FG LV_DIM LV_ACCENT LV_MID
 
   "theme_${func}"
 
@@ -252,7 +267,9 @@ apply_theme() {
   fi
 
   # ── Wallpaper ────────────────────────────────────────────────
-  if [ -n "${LIVE_WALLPAPER:-}" ] && [ -f "$LIVE_WALLPAPER" ]; then
+  if [ -n "${SHADER:-}" ]; then
+    "$LWP" set-builtin "$SHADER"
+  elif [ -n "${LIVE_WALLPAPER:-}" ] && [ -f "$LIVE_WALLPAPER" ]; then
     "$LWP" set "$LIVE_WALLPAPER"
   elif [ -n "${WALLPAPER:-}" ] && [ -f "$WALLPAPER" ]; then
     osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$WALLPAPER\""
@@ -275,7 +292,7 @@ apply_theme() {
   echo "    nvim        → ${NVIM_CS:-skip}"
   echo "    sketchybar  → accent=${SB_ACCENT:-skip} highlight=${SB_HIGHLIGHT:-skip} bg=${SB_BG:-skip}"
   echo "    tmux        → ${LV_ACCENT:-skip}"
-  echo "    wallpaper   → ${WALLPAPER:-${LIVE_WALLPAPER:-skip}}"
+  echo "    wallpaper   → ${SHADER:+shader:$SHADER}${SHADER:-${WALLPAPER:-${LIVE_WALLPAPER:-skip}}}"
   echo ""
 }
 
